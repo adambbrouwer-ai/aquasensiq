@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AquaSensiq — Intelligent Pool Monitoring</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #EEF5FB;
+    --surface:   #F7FAFD;
+    --card:      #FFFFFF;
+    --border:    #C5DCF0;
+    --border2:   #E2EEF8;
+    --primary:   #0077B6;
+    --primary-l: #E0F0FA;
+    --aqua:      #00B4D8;
+    --aqua-l:    #E0F7FC;
+    --success:   #06A77D;
+    --success-l: #E0F5EF;
+    --warn:      #E07B00;
+    --warn-l:    #FFF3E0;
+    --danger:    #D62839;
+    --danger-l:  #FDEAEC;
+    --ai:        #6B3FA0;
+    --ai-l:      #F0EAF9;
+    --ai-border: #C9A8F0;
+    --text:      #0D2137;
+    --text2:     #2C4A6B;
+    --muted:     #5B7FA6;
+    --muted2:    #8AAAC8;
+    --white:     #FFFFFF;
+    --shadow:    0 2px 12px rgba(0,119,182,0.10);
+    --shadow-md: 0 4px 24px rgba(0,119,182,0.13);
+    --shadow-lg: 0 8px 40px rgba(0,119,182,0.16);
+    --radius:    18px;
+    --radius-sm: 12px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content:'';
+    position:fixed; top:0; left:0; right:0; height:320px;
+    background: linear-gradient(160deg, #0077B6 0%, #00B4D8 60%, #90E0EF 100%);
+    z-index:0;
+  }
+
+  /* ── PAGES ── */
+  .page { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:0 0 100px; display:none; }
+  .page.active { display:block; }
+
+  /* ── CONNECT SCREEN ── */
+  #connectPage {
+    display:none;
+    position:fixed; inset:0; z-index:400;
+    background: linear-gradient(160deg, #0077B6 0%, #00B4D8 60%, #AEF3FF 100%);
+    overflow-y:auto;
+  }
+  #connectPage.active { display:block; }
+  .connect-wrap { max-width:440px; margin:0 auto; padding:48px 24px 40px; }
+  .connect-logo {
+    font-family:'Fraunces',serif; font-size:38px; font-weight:900;
+    color:#fff; letter-spacing:-1px; margin-bottom:4px;
+  }
+  .connect-logo span { color:#AEF3FF; }
+  .connect-tagline { font-size:15px; color:rgba(255,255,255,0.75); margin-bottom:40px; font-weight:500; }
+
+  .connect-card {
+    background:#fff; border-radius:24px; padding:28px 24px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.18);
+  }
+  .connect-step-num { font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--primary); margin-bottom:6px; }
+  .connect-title { font-size:22px; font-weight:800; color:var(--text); margin-bottom:8px; }
+  .connect-desc { font-size:15px; color:var(--muted); line-height:1.6; margin-bottom:24px; }
+
+  .connect-steps { display:none; }
+  .connect-steps.active { display:block; animation:fadeUp 0.35s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+
+  .c-field { margin-bottom:16px; }
+  .c-label { font-size:13px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block; letter-spacing:0.3px; }
+  .c-input {
+    width:100%; background:var(--bg); border:2px solid var(--border);
+    border-radius:12px; padding:14px 16px; font-family:'Nunito',sans-serif;
+    font-size:16px; color:var(--text); outline:none; transition:border-color 0.2s;
+    -webkit-appearance:none;
+  }
+  .c-input:focus { border-color:var(--primary); background:#fff; }
+  .c-input::placeholder { color:var(--muted2); }
+
+  .c-btn {
+    width:100%; background:var(--primary); color:#fff;
+    font-family:'Nunito',sans-serif; font-size:16px; font-weight:800;
+    padding:16px; border-radius:14px; border:none; cursor:pointer;
+    transition:opacity 0.2s, transform 0.15s; margin-top:6px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .c-btn:active { transform:scale(0.97); }
+  .c-btn:disabled { opacity:0.55; cursor:not-allowed; }
+  .c-btn.secondary { background:var(--bg); color:var(--primary); border:2px solid var(--border); margin-top:8px; }
+  .c-btn.success-btn { background:var(--success); }
+
+  .c-spinner { width:18px; height:18px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; display:none; }
+  .c-btn.loading .c-spinner { display:block; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+
+  .connect-status {
+    margin-top:14px; padding:12px 16px; border-radius:10px;
+    font-size:14px; font-weight:600; display:none; align-items:center; gap:8px;
+  }
+  .connect-status.ok { background:var(--success-l); color:var(--success); display:flex; }
+  .connect-status.fail { background:var(--danger-l); color:var(--danger); display:flex; }
+  .connect-status.checking { background:var(--primary-l); color:var(--primary); display:flex; }
+
+  .help-link { font-size:13px; color:var(--primary); text-align:center; margin-top:16px; display:block; font-weight:700; cursor:pointer; }
+
+  /* ── SETUP WIZARD ── */
+  #wizardPage {
+    display:none; position:fixed; inset:0; z-index:300;
+    background:var(--bg); overflow-y:auto;
+  }
+  #wizardPage.active { display:block; }
+  .wizard-wrap { max-width:440px; margin:0 auto; padding:40px 20px 40px; }
+
+  .wizard-header {
+    background:linear-gradient(135deg, var(--primary) 0%, var(--aqua) 100%);
+    border-radius:20px; padding:24px; margin-bottom:28px; color:#fff;
+  }
+  .wizard-logo { font-family:'Fraunces',serif; font-size:26px; font-weight:900; letter-spacing:-0.5px; margin-bottom:2px; }
+  .wizard-logo span { color:#AEF3FF; }
+  .wizard-sub { font-size:14px; opacity:0.8; font-weight:500; }
+
+  .wizard-progress { display:flex; gap:6px; margin-bottom:28px; }
+  .prog-dot { height:4px; border-radius:2px; background:var(--border); flex:1; transition:background 0.3s; }
+  .prog-dot.done { background:var(--success); }
+  .prog-dot.active { background:var(--primary); }
+
+  .wizard-card { background:var(--card); border-radius:20px; padding:24px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .step-num { font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--primary); margin-bottom:6px; }
+  .step-title { font-size:24px; font-weight:800; color:var(--text); margin-bottom:8px; }
+  .step-desc { font-size:15px; color:var(--muted); line-height:1.6; margin-bottom:22px; }
+
+  .wizard-step { display:none; }
+  .wizard-step.active { display:block; animation:fadeUp 0.35s ease; }
+
+  .field-group { margin-bottom:16px; }
+  .field-label { font-size:13px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block; letter-spacing:0.3px; }
+  .field-input {
+    width:100%; background:var(--bg); border:2px solid var(--border);
+    border-radius:12px; padding:14px 16px; font-family:'Nunito',sans-serif;
+    font-size:16px; color:var(--text); outline:none; transition:border-color 0.2s;
+    -webkit-appearance:none;
+  }
+  .field-input:focus { border-color:var(--primary); background:#fff; }
+  select.field-input { cursor:pointer; }
+
+  .check-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .check-item {
+    background:var(--bg); border:2px solid var(--border); border-radius:12px;
+    padding:14px; cursor:pointer; transition:all 0.18s; user-select:none;
+  }
+  .check-item.selected { border-color:var(--primary); background:var(--primary-l); }
+  .check-item-name { font-size:14px; font-weight:700; color:var(--text); }
+  .check-item-note { font-size:12px; color:var(--muted); margin-top:3px; }
+
+  .pool-shapes { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .shape-item {
+    background:var(--bg); border:2px solid var(--border); border-radius:12px;
+    padding:16px 10px; cursor:pointer; transition:all 0.18s; text-align:center; user-select:none;
+  }
+  .shape-item.selected { border-color:var(--primary); background:var(--primary-l); }
+  .shape-icon { font-size:28px; margin-bottom:4px; }
+  .shape-name { font-size:12px; font-weight:700; color:var(--muted); }
+
+  .btn-primary {
+    width:100%; background:var(--primary); color:#fff;
+    font-family:'Nunito',sans-serif; font-size:16px; font-weight:800;
+    padding:16px; border-radius:14px; border:none; cursor:pointer;
+    letter-spacing:0.3px; margin-top:8px; transition:opacity 0.2s, transform 0.15s;
+    box-shadow:0 4px 16px rgba(0,119,182,0.25);
+  }
+  .btn-primary:active { transform:scale(0.97); }
+  .btn-secondary {
+    background:transparent; border:2px solid var(--border);
+    color:var(--muted); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700;
+    padding:14px; border-radius:12px; cursor:pointer; width:100%; margin-top:8px;
+    transition:border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color:var(--primary); color:var(--primary); }
+
+  /* ── HEADER ── */
+  header {
+    padding:20px 20px 0;
+    display:flex; align-items:center; justify-content:space-between;
+    position:relative; z-index:10;
+  }
+  .logo { font-family:'Fraunces',serif; font-size:24px; font-weight:900; color:#fff; letter-spacing:-0.5px; }
+  .logo span { color:#AEF3FF; }
+  .header-right { display:flex; align-items:center; gap:10px; }
+  .status-pill {
+    background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3);
+    border-radius:20px; padding:5px 12px;
+    display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px);
+  }
+  .status-dot { width:8px; height:8px; border-radius:50%; background:#AEF3FF; box-shadow:0 0 6px #AEF3FF; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(0.85);} }
+  .status-text { font-size:12px; font-weight:700; color:#fff; }
+  .settings-btn {
+    background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3);
+    border-radius:10px; padding:7px 10px; color:#fff; font-size:16px; cursor:pointer;
+    backdrop-filter:blur(8px);
+  }
+  .sim-badge {
+    background:rgba(255,200,0,0.25); border:1px solid rgba(255,200,0,0.5);
+    border-radius:20px; padding:3px 10px;
+    font-size:11px; font-weight:800; color:#FFE066; letter-spacing:0.5px;
+  }
+
+  /* ── HERO AREA ── */
+  .hero { padding:16px 20px 28px; position:relative; z-index:10; }
+  .hero-greeting { font-size:15px; color:rgba(255,255,255,0.75); font-weight:600; margin-bottom:4px; }
+  .hero-title { font-family:'Fraunces',serif; font-size:30px; font-weight:900; color:#fff; line-height:1.15; margin-bottom:16px; }
+
+  /* ── CARDS CONTAINER ── */
+  .cards-container { padding:0 16px; position:relative; z-index:10; }
+
+  /* ── AI ADVISOR CARD ── */
+  .advisor-card {
+    background:var(--card); border-radius:var(--radius); padding:20px;
+    box-shadow:var(--shadow-lg); margin-bottom:16px;
+    border-left:5px solid var(--ai);
+  }
+  .advisor-tag { font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--ai); margin-bottom:6px; }
+  .advisor-title { font-size:20px; font-weight:800; color:var(--text); margin-bottom:6px; }
+  .advisor-desc { font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:14px; }
+  .advisor-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .advisor-chip {
+    background:var(--bg); border:1.5px solid var(--border);
+    border-radius:20px; padding:5px 12px;
+    font-size:13px; font-weight:600; color:var(--muted);
+  }
+  .advisor-chip strong { color:var(--primary); }
+
+  .advisor-btn {
+    width:100%; background:linear-gradient(135deg, var(--ai) 0%, #9B59B6 100%);
+    color:#fff; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800;
+    padding:16px; border-radius:14px; border:none; cursor:pointer;
+    box-shadow:0 4px 20px rgba(107,63,160,0.3);
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    transition:transform 0.15s, opacity 0.2s;
+  }
+  .advisor-btn:active { transform:scale(0.97); }
+  .advisor-btn:disabled { opacity:0.55; cursor:not-allowed; }
+  .advisor-btn .btn-spinner { width:18px; height:18px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; display:none; }
+  .advisor-btn.loading .btn-spinner { display:block; }
+
+  /* ── AI RESPONSE PANEL ── */
+  .ai-panel {
+    background:var(--card); border-radius:var(--radius); overflow:hidden;
+    box-shadow:var(--shadow); margin-bottom:16px; display:none;
+    border:1.5px solid var(--ai-border);
+  }
+  .ai-panel.visible { display:block; animation:fadeUp 0.4s ease; }
+  .ai-panel-header {
+    background:linear-gradient(135deg, var(--ai-l), #F5E6FF);
+    padding:14px 18px; border-bottom:1px solid var(--ai-border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .ai-panel-title { font-size:14px; font-weight:800; color:var(--ai); }
+  .ai-panel-time { font-size:12px; color:var(--muted); font-weight:600; }
+  .ai-panel-body { padding:18px; }
+
+  .dose-list { display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+  .dose-card {
+    background:var(--bg); border:1.5px solid var(--border2);
+    border-radius:var(--radius-sm); padding:14px 16px;
+    display:flex; align-items:flex-start; gap:14px;
+  }
+  .dose-card.ok { border-color:#B2EDD8; background:var(--success-l); }
+  .dose-card.warn { border-color:#FFD9A0; background:var(--warn-l); }
+  .dose-card.action { border-color:var(--ai-border); background:var(--ai-l); }
+  .dose-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+  .dose-content { flex:1; }
+  .dose-param { font-size:12px; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--muted); }
+  .dose-reading { font-size:17px; font-weight:800; margin:3px 0; color:var(--text); }
+  .dose-reading .arrow { font-size:14px; color:var(--muted); margin:0 5px; }
+  .dose-reading .target { font-size:14px; color:var(--muted); font-weight:600; }
+  .dose-action { font-size:14px; color:var(--text2); line-height:1.5; margin-top:5px; }
+  .dose-amount {
+    display:inline-block; margin-top:7px;
+    padding:4px 12px; border-radius:20px;
+    font-size:13px; font-weight:800; font-family:'Nunito',sans-serif;
+  }
+  .dose-amount.green { background:var(--success-l); color:var(--success); border:1.5px solid #B2EDD8; }
+  .dose-amount.yellow { background:var(--warn-l); color:var(--warn); border:1.5px solid #FFD9A0; }
+  .dose-amount.purple { background:var(--ai-l); color:var(--ai); border:1.5px solid var(--ai-border); }
+
+  .ai-summary { font-size:14px; color:var(--muted); line-height:1.7; padding-top:12px; border-top:1px solid var(--border2); }
+  .ai-summary strong { color:var(--text); }
+  .ai-disclaimer { font-size:12px; color:var(--muted2); margin-top:10px; font-style:italic; line-height:1.5; }
+
+  /* ── ALGAE RISK ── */
+  .algae-card {
+    background:var(--card); border-radius:var(--radius); padding:18px 20px;
+    box-shadow:var(--shadow); margin-bottom:16px;
+  }
+  .algae-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .algae-label { font-size:13px; font-weight:800; letter-spacing:0.5px; color:var(--muted); }
+  .algae-risk-val { font-size:15px; font-weight:800; }
+  .risk-low { color:var(--success); } .risk-medium { color:var(--warn); } .risk-high { color:var(--danger); }
+  .risk-bar-track { height:8px; background:var(--bg); border-radius:4px; overflow:hidden; border:1px solid var(--border); }
+  .risk-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--success),var(--warn),var(--danger)); transition:width 1.2s ease; }
+  .risk-factors { margin-top:12px; display:flex; gap:6px; flex-wrap:wrap; }
+  .risk-tag { font-size:12px; font-weight:700; padding:4px 10px; border-radius:20px; background:var(--bg); color:var(--muted); border:1.5px solid var(--border); }
+  .risk-tag.active { background:var(--warn-l); color:var(--warn); border-color:#FFD9A0; }
+
+  /* ── METRICS GRID ── */
+  .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .metric-card {
+    background:var(--card); border-radius:var(--radius); padding:18px;
+    box-shadow:var(--shadow); cursor:pointer; transition:transform 0.2s, box-shadow 0.2s;
+    position:relative; overflow:hidden;
+  }
+  .metric-card:active { transform:scale(0.97); }
+  .metric-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--border); transition:background 0.3s; }
+  .metric-card.ok::before { background:var(--success); }
+  .metric-card.warn::before { background:var(--warn); }
+  .metric-card.danger::before { background:var(--danger); }
+  .metric-icon { font-size:24px; margin-bottom:10px; }
+  .metric-name { font-size:12px; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .metric-value { font-size:32px; font-weight:800; color:var(--text); line-height:1; font-family:'Fraunces',serif; }
+  .metric-unit { font-size:15px; color:var(--muted); font-weight:600; font-family:'Nunito',sans-serif; }
+  .metric-status { margin-top:8px; font-size:13px; font-weight:700; }
+  .status-ok { color:var(--success); } .status-warn { color:var(--warn); } .status-danger { color:var(--danger); }
+  .metric-range { font-size:12px; color:var(--muted); margin-top:4px; font-weight:600; }
+  .sparkline { margin-top:10px; height:32px; }
+  .sparkline svg { width:100%; height:100%; }
+
+  /* ── SECTION HEAD ── */
+  .section-head { padding:20px 20px 10px; font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+
+  /* ── CHART ── */
+  .chart-card { background:var(--card); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .chart-tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .chart-tab { font-size:13px; font-weight:700; padding:7px 16px; border-radius:20px; cursor:pointer; border:2px solid var(--border); color:var(--muted); transition:all 0.2s; background:var(--bg); }
+  .chart-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 2px 10px rgba(0,119,182,0.25); }
+  .chart-area { height:120px; }
+  .chart-area svg { width:100%; height:100%; }
+  .chart-labels { display:flex; justify-content:space-between; margin-top:6px; }
+  .chart-label { font-size:11px; color:var(--muted); font-weight:600; }
+
+  /* ── SENSOR HEALTH ── */
+  .sensor-list { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+  .sensor-item {
+    background:var(--card); border-radius:var(--radius-sm); padding:14px 16px;
+    box-shadow:var(--shadow); display:flex; align-items:center; gap:12px;
+  }
+  .sensor-indicator { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .s-ok { background:var(--success); box-shadow:0 0 6px rgba(6,167,125,0.4); }
+  .s-clean { background:var(--primary); box-shadow:0 0 6px rgba(0,119,182,0.4); animation:pulse 1.5s infinite; }
+  .sensor-name { font-size:15px; font-weight:700; color:var(--text); flex:1; }
+  .sensor-meta { font-size:12px; color:var(--muted); text-align:right; font-weight:600; }
+  .sensor-meta span { display:block; color:var(--text2); }
+
+  /* ── MAINTENANCE ── */
+  .maint-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .maint-card { background:var(--card); border-radius:var(--radius-sm); padding:16px; box-shadow:var(--shadow); }
+  .maint-icon { font-size:22px; margin-bottom:8px; }
+  .maint-name { font-size:14px; font-weight:800; color:var(--text); }
+  .maint-next { font-size:12px; color:var(--muted); margin-top:3px; font-weight:600; }
+  .maint-btn {
+    margin-top:10px; background:var(--primary-l); border:1.5px solid var(--border);
+    color:var(--primary); font-family:'Nunito',sans-serif; font-size:13px; font-weight:800;
+    padding:8px 12px; border-radius:10px; cursor:pointer; width:100%; transition:background 0.2s;
+  }
+  .maint-btn:hover { background:var(--primary); color:#fff; }
+
+  /* ── ALERT BANNER ── */
+  .alert-banner {
+    background:var(--card); border-radius:var(--radius-sm); padding:14px 16px;
+    box-shadow:var(--shadow); margin-bottom:14px;
+    display:flex; align-items:flex-start; gap:12px;
+    border-left:4px solid var(--warn);
+  }
+  .alert-banner.danger { border-left-color:var(--danger); }
+  .alert-icon { font-size:22px; flex-shrink:0; }
+  .alert-text { font-size:14px; line-height:1.5; }
+  .alert-text strong { display:block; margin-bottom:2px; color:var(--warn); font-size:15px; }
+  .alert-banner.danger .alert-text strong { color:var(--danger); }
+
+  /* ── SETTINGS PAGE ── */
+  .settings-section { padding:0 16px; margin-bottom:20px; }
+  .settings-card { background:var(--card); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+  .settings-row { padding:16px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border2); cursor:pointer; transition:background 0.15s; }
+  .settings-row:hover { background:var(--bg); }
+  .settings-row:last-child { border-bottom:none; }
+  .settings-row-label { font-size:16px; font-weight:700; color:var(--text); }
+  .settings-row-value { font-size:14px; color:var(--muted); font-weight:600; }
+  .settings-row-arrow { color:var(--muted2); font-size:18px; margin-left:8px; }
+  .settings-danger-btn {
+    width:100%; background:var(--danger-l); border:1.5px solid #F5B8BE;
+    color:var(--danger); font-family:'Nunito',sans-serif; font-size:15px; font-weight:800;
+    padding:14px; border-radius:14px; cursor:pointer; margin-top:8px;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto;
+    background:rgba(255,255,255,0.96); backdrop-filter:blur(20px);
+    border-top:1px solid var(--border2);
+    box-shadow:0 -4px 20px rgba(0,119,182,0.08);
+    display:flex; padding:10px 0 22px; justify-content:space-around; z-index:100;
+  }
+  .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:0 16px; }
+  .nav-icon { font-size:22px; }
+  .nav-label { font-size:11px; font-weight:800; letter-spacing:0.5px; text-transform:uppercase; color:var(--muted); }
+  .nav-item.active .nav-label { color:var(--primary); }
+  .nav-item.active .nav-icon { filter:drop-shadow(0 0 4px rgba(0,119,182,0.4)); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ CONNECT SCREEN ═══════════════ -->
+<div id="connectPage">
+  <div class="connect-wrap">
+    <div class="connect-logo">Aqua<span>Sensiq</span></div>
+    <div class="connect-tagline">Intelligent Pool Monitoring System</div>
+
+    <div class="connect-card">
+
+      <!-- Step 1: Enter Pi address -->
+      <div class="connect-steps active" id="cs0">
+        <div class="connect-step-num">Getting Started</div>
+        <div class="connect-title">Connect to your Pi</div>
+        <div class="connect-desc">Enter your AquaSensiq Pi's Tailscale address below. You'll find this by running <strong>tailscale ip</strong> in your Pi's terminal. It looks like <strong>100.x.x.x</strong></div>
+        <div class="c-field">
+          <label class="c-label">Pi Tailscale Address</label>
+          <input type="text" class="c-input" id="piAddress" placeholder="100.x.x.x" inputmode="decimal">
+        </div>
+        <div class="c-field">
+          <label class="c-label">Port (default 5000)</label>
+          <input type="number" class="c-input" id="piPort" value="5000" inputmode="numeric">
+        </div>
+        <button class="c-btn" id="connectBtn" onclick="testConnection()">
+          <div class="c-spinner"></div>
+          <span>Test Connection →</span>
+        </button>
+        <div class="connect-status" id="connectStatus"></div>
+        <a class="help-link" onclick="showHelpModal()">Need help finding your Pi's address?</a>
+      </div>
+
+      <!-- Step 2: Connected confirmation -->
+      <div class="connect-steps" id="cs1">
+        <div class="connect-step-num">✓ Connected</div>
+        <div class="connect-title">Pi found!</div>
+        <div class="connect-desc">AquaSensiq is running on your Pi and ready to go. Let's set up your pool profile.</div>
+        <button class="c-btn success-btn" onclick="proceedToWizard()">Set Up My Pool →</button>
+        <button class="c-btn secondary" onclick="showConnectStep(0)">← Change Address</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SETUP WIZARD ═══════════════ -->
+<div id="wizardPage">
+  <div class="wizard-wrap">
+    <div class="wizard-header">
+      <div class="wizard-logo">Aqua<span>Sensiq</span></div>
+      <div class="wizard-sub">Intelligent Pool Monitoring System</div>
+    </div>
+
+    <div class="wizard-progress">
+      <div class="prog-dot active" id="prog0"></div>
+      <div class="prog-dot" id="prog1"></div>
+      <div class="prog-dot" id="prog2"></div>
+      <div class="prog-dot" id="prog3"></div>
+    </div>
+
+    <!-- Step 0: Pool Volume -->
+    <div class="wizard-card">
+      <div class="wizard-step active" id="step0">
+        <div class="step-num">Step 1 of 4</div>
+        <div class="step-title">What's your pool volume?</div>
+        <div class="step-desc">The most important number for calculating chemical doses. Check your pool builder paperwork, or estimate using the shape calculator below.</div>
+
+        <div class="field-group">
+          <label class="field-label">Pool Volume</label>
+          <input type="number" class="field-input" id="poolVolume" placeholder="e.g. 15000" inputmode="numeric">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Units</label>
+          <select class="field-input" id="volumeUnit">
+            <option value="gallons">US Gallons</option>
+            <option value="liters">Liters</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div class="field-label" style="margin-bottom:10px;">Or estimate by pool shape</div>
+          <div class="pool-shapes" id="shapeSelector">
+            <div class="shape-item selected" data-shape="rectangle" onclick="selectShape(this)">
+              <div class="shape-icon">⬛</div>
+              <div class="shape-name">Rectangle</div>
+            </div>
+            <div class="shape-item" data-shape="oval" onclick="selectShape(this)">
+              <div class="shape-icon">⬭</div>
+              <div class="shape-name">Oval</div>
+            </div>
+            <div class="shape-item" data-shape="kidney" onclick="selectShape(this)">
+              <div class="shape-icon">🫘</div>
+              <div class="shape-name">Kidney / Freeform</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Dimensions (feet)</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <input type="number" class="field-input" id="dimL" placeholder="Length" inputmode="decimal">
+            <input type="number" class="field-input" id="dimW" placeholder="Width" inputmode="decimal">
+            <input type="number" class="field-input" id="dimD" placeholder="Avg Depth" inputmode="decimal">
+          </div>
+          <button class="btn-secondary" style="margin-top:8px;" onclick="estimateVolume()">→ Estimate Volume</button>
+        </div>
+
+        <button class="btn-primary" onclick="nextStep(1)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 1: System Info -->
+    <div class="wizard-card" style="display:none;" id="wcard1">
+      <div class="wizard-step" id="step1">
+        <div class="step-num">Step 2 of 4</div>
+        <div class="step-title">About your system</div>
+        <div class="step-desc">Helps calibrate salt targets and chlorine generation estimates.</div>
+
+        <div class="field-group">
+          <label class="field-label">Salt Chlorine Generator Brand</label>
+          <select class="field-input" id="swcgBrand">
+            <option value="Pentair">Pentair IntelliChlor</option>
+            <option value="Hayward">Hayward AquaRite</option>
+            <option value="Jandy">Jandy TruClear</option>
+            <option value="CircuPool">CircuPool</option>
+            <option value="Other">Other / Unknown</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">SWCG Cell Size</label>
+          <select class="field-input" id="swcgSize">
+            <option value="15000">Up to 15,000 gal</option>
+            <option value="25000" selected>Up to 25,000 gal</option>
+            <option value="40000">Up to 40,000 gal</option>
+            <option value="60000">Up to 60,000 gal</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pool Finish</label>
+          <select class="field-input" id="poolFinish">
+            <option value="plaster">Plaster / Marcite</option>
+            <option value="pebble">Pebble Tec / Aggregate</option>
+            <option value="vinyl">Vinyl Liner</option>
+            <option value="fiberglass">Fiberglass</option>
+            <option value="tile">Tile</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Typical Bather Load</label>
+          <select class="field-input" id="batherLoad">
+            <option value="low">Low — 1–2 people occasionally</option>
+            <option value="medium" selected>Medium — Family use most days</option>
+            <option value="high">High — Frequent parties / heavy use</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" onclick="nextStep(2)">Continue →</button>
+        <button class="btn-secondary" onclick="nextStep(0)">← Back</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Chemicals -->
+    <div class="wizard-card" style="display:none;" id="wcard2">
+      <div class="wizard-step" id="step2">
+        <div class="step-num">Step 3 of 4</div>
+        <div class="step-title">Your chemicals</div>
+        <div class="step-desc">Select the products you have on hand. AquaSensiq will calculate precise doses for your specific products.</div>
+
+        <div style="margin-bottom:18px;">
+          <div class="field-label" style="margin-bottom:8px;">pH Reducer</div>
+          <div class="check-grid" id="phDown">
+            <div class="check-item selected" data-val="muriatic" onclick="toggleCheck(this,'phDown')">
+              <div class="check-item-name">Muriatic Acid</div>
+              <div class="check-item-note">Liquid, 31.45%</div>
+            </div>
+            <div class="check-item" data-val="dryacid" onclick="toggleCheck(this,'phDown')">
+              <div class="check-item-name">Dry Acid</div>
+              <div class="check-item-note">Sodium bisulfate</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div class="field-label" style="margin-bottom:8px;">pH Increaser</div>
+          <div class="check-grid" id="phUp">
+            <div class="check-item selected" data-val="sodaash" onclick="toggleCheck(this,'phUp')">
+              <div class="check-item-name">Soda Ash</div>
+              <div class="check-item-note">Sodium carbonate</div>
+            </div>
+            <div class="check-item" data-val="bicarb" onclick="toggleCheck(this,'phUp')">
+              <div class="check-item-name">Baking Soda</div>
+              <div class="check-item-note">Sodium bicarbonate</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div class="field-label" style="margin-bottom:8px;">Shock / Chlorine</div>
+          <div class="check-grid" id="chlorineType">
+            <div class="check-item selected" data-val="liquidcl" onclick="toggleCheck(this,'chlorineType')">
+              <div class="check-item-name">Liquid Chlorine</div>
+              <div class="check-item-note">10–12.5% sodium hypochlorite</div>
+            </div>
+            <div class="check-item" data-val="calchhypo" onclick="toggleCheck(this,'chlorineType')">
+              <div class="check-item-name">Cal-Hypo</div>
+              <div class="check-item-note">Granular, 65–73%</div>
+            </div>
+            <div class="check-item" data-val="dichlor" onclick="toggleCheck(this,'chlorineType')">
+              <div class="check-item-name">Dichlor</div>
+              <div class="check-item-note">Granular, 56–62%</div>
+            </div>
+            <div class="check-item" data-val="trichlor" onclick="toggleCheck(this,'chlorineType')">
+              <div class="check-item-name">Trichlor Tabs</div>
+              <div class="check-item-note">90%</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <div class="field-label" style="margin-bottom:8px;">Salt</div>
+          <div class="check-grid" id="saltType">
+            <div class="check-item selected" data-val="poolsalt" onclick="toggleCheck(this,'saltType')">
+              <div class="check-item-name">Pool Salt</div>
+              <div class="check-item-note">99%+ NaCl</div>
+            </div>
+            <div class="check-item" data-val="solarsalt" onclick="toggleCheck(this,'saltType')">
+              <div class="check-item-name">Solar Salt</div>
+              <div class="check-item-note">Pellets, ~99% NaCl</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="nextStep(3)">Continue →</button>
+        <button class="btn-secondary" onclick="nextStep(1)">← Back</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirm -->
+    <div class="wizard-card" style="display:none;" id="wcard3">
+      <div class="wizard-step" id="step3">
+        <div class="step-num">Step 4 of 4</div>
+        <div class="step-title">All set! 🏊</div>
+        <div class="step-desc">Your pool profile is saved. You can update it anytime from the Settings tab.</div>
+        <div id="summaryBox" style="background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px;"></div>
+        <div class="field-group">
+          <label class="field-label">Your Name (optional)</label>
+          <input type="text" class="field-input" id="ownerName" placeholder="e.g. Alex">
+        </div>
+        <button class="btn-primary" onclick="completeSetup()">Launch AquaSensiq →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN DASHBOARD ═══════════════ -->
+<div class="page active" id="dashPage">
+
+  <header>
+    <div class="logo">Aqua<span>Sensiq</span></div>
+    <div class="header-right">
+      <div class="sim-badge" id="simBadge" style="display:none;">SIMULATION</div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <div class="status-text" id="lastUpdated">Live</div>
+      </div>
+      <button class="settings-btn" onclick="showPage('settingsPage')">⚙</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-greeting" id="heroGreeting">Good morning</div>
+    <div class="hero-title">Your pool looks<br>mostly good today.</div>
+  </div>
+
+  <div class="cards-container">
+
+    <!-- Alert -->
+    <div class="alert-banner" id="alertBanner">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-text">
+        <strong id="alertTitle">pH Trending High</strong>
+        <span id="alertBody">pH has risen 0.3 units in 2 hrs. Tap Analyse for dosing advice.</span>
+      </div>
+    </div>
+
+    <!-- AI Advisor -->
+    <div class="advisor-card">
+      <div class="advisor-tag">✦ AI Chemical Advisor</div>
+      <div class="advisor-title">What does my pool need right now?</div>
+      <div class="advisor-desc">Tap for real-time dosing recommendations calculated for your exact pool volume and the chemicals you have on hand.</div>
+      <div class="advisor-chips" id="poolInfoChips">
+        <div class="advisor-chip"><strong id="chipVol">—</strong> gal</div>
+        <div class="advisor-chip"><strong id="chipSWCG">—</strong></div>
+        <div class="advisor-chip"><strong id="chipChems">—</strong> chemicals set</div>
+      </div>
+      <button class="advisor-btn" id="analyzeBtn" onclick="runAnalysis()">
+        <div class="btn-spinner"></div>
+        <span class="btn-label">🔬 Analyse My Pool Now</span>
+      </button>
+    </div>
+
+    <!-- AI Response -->
+    <div class="ai-panel" id="aiPanel">
+      <div class="ai-panel-header">
+        <div class="ai-panel-title">✦ Live Dosing Report</div>
+        <div class="ai-panel-time" id="aiPanelTime">—</div>
+      </div>
+      <div class="ai-panel-body">
+        <div class="dose-list" id="doseList"></div>
+        <div class="ai-summary" id="aiSummary"></div>
+        <div class="ai-disclaimer">⚠ Always add chemicals slowly to pool water, never the reverse. Wait 30 min between additions. Retest before adding more.</div>
+      </div>
+    </div>
+
+    <!-- Algae Risk -->
+    <div class="algae-card">
+      <div class="algae-header">
+        <div class="algae-label">🦠 Algae Outbreak Risk</div>
+        <div class="algae-risk-val risk-low" id="riskLabel">LOW — 12%</div>
+      </div>
+      <div class="risk-bar-track"><div class="risk-bar-fill" id="riskBar" style="width:12%"></div></div>
+      <div class="risk-factors">
+        <div class="risk-tag">pH ✓</div>
+        <div class="risk-tag active">Cl⁻ Low</div>
+        <div class="risk-tag">Temp ✓</div>
+        <div class="risk-tag">Salt ✓</div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics-grid">
+      <div class="metric-card warn">
+        <div class="metric-icon">🧪</div>
+        <div class="metric-name">pH Level</div>
+        <div class="metric-value" id="mPH">7.9</div>
+        <div class="metric-range">Target: 7.2–7.6</div>
+        <div class="metric-status status-warn">⬆ Slightly High</div>
+        <div class="sparkline"><svg viewBox="0 0 100 32" preserveAspectRatio="none">
+          <polyline points="0,26 25,22 50,18 75,13 100,9" fill="none" stroke="var(--warn)" stroke-width="2.5" stroke-linecap="round"/>
+          <polyline points="0,26 25,22 50,18 75,13 100,9 100,32 0,32" fill="rgba(224,123,0,0.08)" stroke="none"/>
+        </svg></div>
+      </div>
+      <div class="metric-card warn">
+        <div class="metric-icon">⚗️</div>
+        <div class="metric-name">Free Chlorine</div>
+        <div class="metric-value" id="mCL">2.1<span class="metric-unit"> ppm</span></div>
+        <div class="metric-range">Target: 3–5 ppm</div>
+        <div class="metric-status status-warn">⬇ Below Target</div>
+        <div class="sparkline"><svg viewBox="0 0 100 32" preserveAspectRatio="none">
+          <polyline points="0,6 25,10 50,16 75,21 100,26" fill="none" stroke="var(--warn)" stroke-width="2.5" stroke-linecap="round"/>
+        </svg></div>
+      </div>
+      <div class="metric-card ok">
+        <div class="metric-icon">🌡️</div>
+        <div class="metric-name">Temperature</div>
+        <div class="metric-value" id="mTEMP">82<span class="metric-unit">°F</span></div>
+        <div class="metric-range">Ideal: 78–86°F</div>
+        <div class="metric-status status-ok">✓ Optimal</div>
+        <div class="sparkline"><svg viewBox="0 0 100 32" preserveAspectRatio="none">
+          <polyline points="0,18 25,17 50,16 75,17 100,16" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round"/>
+        </svg></div>
+      </div>
+      <div class="metric-card ok">
+        <div class="metric-icon">🧂</div>
+        <div class="metric-name">Salinity</div>
+        <div class="metric-value" id="mSALT">3200<span class="metric-unit"> ppm</span></div>
+        <div class="metric-range">Target: 2700–3400</div>
+        <div class="metric-status status-ok">✓ Good</div>
+        <div class="sparkline"><svg viewBox="0 0 100 32" preserveAspectRatio="none">
+          <polyline points="0,17 25,17 50,16 75,17 100,16" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round"/>
+        </svg></div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-card">
+      <div class="chart-tabs">
+        <div class="chart-tab active">pH</div>
+        <div class="chart-tab">Chlorine</div>
+        <div class="chart-tab">Temp</div>
+        <div class="chart-tab">Salt</div>
+      </div>
+      <div class="chart-area">
+        <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+          <line x1="0" y1="25" x2="300" y2="25" stroke="var(--border2)" stroke-width="1"/>
+          <line x1="0" y1="50" x2="300" y2="50" stroke="var(--border2)" stroke-width="1"/>
+          <line x1="0" y1="75" x2="300" y2="75" stroke="var(--border2)" stroke-width="1"/>
+          <rect x="0" y="35" width="300" height="30" fill="rgba(6,167,125,0.06)"/>
+          <polyline points="0,65 60,58 120,52 180,44 240,36 300,27"
+            fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="0,65 60,58 120,52 180,44 240,36 300,27 300,100 0,100"
+            fill="rgba(0,119,182,0.07)" stroke="none"/>
+          <circle cx="300" cy="27" r="5" fill="var(--primary)"/>
+          <circle cx="300" cy="27" r="9" fill="rgba(0,119,182,0.15)"/>
+        </svg>
+      </div>
+      <div class="chart-labels">
+        <div class="chart-label">12am</div>
+        <div class="chart-label">6am</div>
+        <div class="chart-label">12pm</div>
+        <div class="chart-label">6pm</div>
+        <div class="chart-label">Now</div>
+      </div>
+    </div>
+
+    <!-- Sensor Health -->
+    <div class="section-head">Sensor Health</div>
+    <div class="sensor-list">
+      <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">Atlas Scientific pH</div><div class="sensor-meta">Last cleaned<span>6 hrs ago</span></div></div>
+      <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">Atlas Scientific ORP / Cl</div><div class="sensor-meta">Last cleaned<span>6 hrs ago</span></div></div>
+      <div class="sensor-item"><div class="sensor-indicator s-clean"></div><div class="sensor-name">Conductivity (Salt)</div><div class="sensor-meta">Auto-cleaning<span style="color:var(--primary)">In progress…</span></div></div>
+      <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">DS18B20 Temperature</div><div class="sensor-meta">Calibrated<span>4 days ago</span></div></div>
+    </div>
+
+    <!-- Maintenance -->
+    <div class="section-head">Automated Maintenance</div>
+    <div class="maint-grid">
+      <div class="maint-card"><div class="maint-icon">🔧</div><div class="maint-name">Auto Calibrate</div><div class="maint-next">Next: Tomorrow 3am</div><button class="maint-btn" onclick="triggerAction(this,'Calibrating…')">Run Now</button></div>
+      <div class="maint-card"><div class="maint-icon">🚿</div><div class="maint-name">Sensor Rinse</div><div class="maint-next">Every 6 hours</div><button class="maint-btn" onclick="triggerAction(this,'Rinsing…')">Run Now</button></div>
+      <div class="maint-card"><div class="maint-icon">📊</div><div class="maint-name">Export Report</div><div class="maint-next">Last: Yesterday</div><button class="maint-btn" onclick="triggerAction(this,'Generating…')">Export CSV</button></div>
+      <div class="maint-card"><div class="maint-icon">🔔</div><div class="maint-name">Test Alerts</div><div class="maint-next">Pushover</div><button class="maint-btn" onclick="triggerAction(this,'Sending…')">Test</button></div>
+    </div>
+
+    <div style="height:10px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SETTINGS PAGE ═══════════════ -->
+<div class="page" id="settingsPage">
+  <header>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="showPage('dashPage')" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:20px;width:36px;height:36px;border-radius:10px;cursor:pointer;backdrop-filter:blur(8px);">←</button>
+      <div class="logo" style="font-size:20px;">Settings</div>
+    </div>
+    <div class="status-dot" style="background:#AEF3FF;box-shadow:0 0 6px #AEF3FF;width:10px;height:10px;border-radius:50%;animation:pulse 2s infinite;"></div>
+  </header>
+
+  <div style="height:20px;"></div>
+
+  <div class="settings-section">
+    <div class="section-head" style="padding:0 0 10px;">Pool Configuration</div>
+    <div class="settings-card">
+      <div class="settings-row"><div class="settings-row-label">Pool Volume</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-volume">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">SWCG / Cell Size</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-swcg">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Pool Finish</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-finish">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Bather Load</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-bather">—</div><div class="settings-row-arrow">›</div></div></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="section-head" style="padding:0 0 10px;">Chemicals On Hand</div>
+    <div class="settings-card">
+      <div class="settings-row"><div class="settings-row-label">pH Reducer</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-phdown">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">pH Increaser</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-phup">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Shock / Chlorine</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-chlorine">—</div><div class="settings-row-arrow">›</div></div></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="section-head" style="padding:0 0 10px;">Connection</div>
+    <div class="settings-card">
+      <div class="settings-row"><div class="settings-row-label">Pi Address</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-piaddr">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Connection Mode</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value">Tailscale</div><div class="settings-row-arrow">›</div></div></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <button class="btn-primary" onclick="resetSetup()" style="margin-bottom:10px;">🔄 Re-run Setup Wizard</button>
+    <button class="settings-danger-btn" onclick="resetConnection()">↩ Change Pi Connection</button>
+  </div>
+</div>
+
+<!-- ═══════════════ BOTTOM NAV ═══════════════ -->
+<nav class="bottom-nav" id="mainNav" style="display:none;">
+  <div class="nav-item active" onclick="showPage('dashPage');setNav(this)">
+    <div class="nav-icon">🏠</div><div class="nav-label">Dashboard</div>
+  </div>
+  <div class="nav-item" onclick="showPage('dashPage');setNav(this)">
+    <div class="nav-icon">📈</div><div class="nav-label">History</div>
+  </div>
+  <div class="nav-item" onclick="showPage('dashPage');setNav(this)">
+    <div class="nav-icon">🔧</div><div class="nav-label">Maintenance</div>
+  </div>
+  <div class="nav-item" onclick="showPage('settingsPage');setNav(this)">
+    <div class="nav-icon">⚙️</div><div class="nav-label">Settings</div>
+  </div>
+</nav>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+// ── Storage keys ──────────────────────────────────────────────────────
+const KEY_PROFILE    = 'aquasensiq_profile';
+const KEY_CONNECTION = 'aquasensiq_connection';
+
+function load(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let poolProfile  = load(KEY_PROFILE);
+let piConnection = load(KEY_CONNECTION);  // { address, port }
+
+// ── Greeting ──────────────────────────────────────────────────────────
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ── Connect screen ────────────────────────────────────────────────────
+function showConnectStep(n) {
+  document.querySelectorAll('.connect-steps').forEach(s => s.classList.remove('active'));
+  document.getElementById('cs' + n).classList.add('active');
+}
+
+async function testConnection() {
+  const addr = document.getElementById('piAddress').value.trim();
+  const port = document.getElementById('piPort').value.trim() || '5000';
+  if (!addr) { alert('Please enter your Pi\'s Tailscale address.'); return; }
+
+  const btn = document.getElementById('connectBtn');
+  const status = document.getElementById('connectStatus');
+  btn.classList.add('loading'); btn.disabled = true;
+  status.className = 'connect-status checking';
+  status.innerHTML = '⏳ Testing connection…'; status.style.display = 'flex';
+
+  const url = `http://${addr}:${port}/api/status`;
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (res.ok) {
+      save(KEY_CONNECTION, { address: addr, port: port });
+      piConnection = { address: addr, port: port };
+      status.className = 'connect-status ok';
+      status.innerHTML = '✓ Connected successfully!';
+      setTimeout(() => showConnectStep(1), 800);
+    } else {
+      throw new Error('Bad response');
+    }
+  } catch (e) {
+    status.className = 'connect-status fail';
+    status.innerHTML = '✗ Could not reach Pi. Check the address and that aquasensiq.py is running.';
+  } finally {
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+function proceedToWizard() {
+  document.getElementById('connectPage').classList.remove('active');
+  document.getElementById('wizardPage').classList.add('active');
+}
+
+function showHelpModal() {
+  alert('SSH into your Pi and run:\n\n  tailscale ip\n\nCopy the number that looks like 100.x.x.x and paste it above.\n\nMake sure aquasensiq.py is running on your Pi first.');
+}
+
+// ── Wizard ────────────────────────────────────────────────────────────
+let currentStep = 0;
+const wcards = ['', 'wcard1', 'wcard2', 'wcard3'];
+
+function nextStep(n) {
+  if (n === 1) {
+    const vol = document.getElementById('poolVolume').value;
+    if (!vol || vol < 500) { alert('Please enter a valid pool volume (minimum 500 gallons).'); return; }
+  }
+  document.getElementById('step' + currentStep).classList.remove('active');
+  if (currentStep > 0) document.getElementById(wcards[currentStep]).style.display = 'none';
+  currentStep = n;
+  document.getElementById('step' + n).classList.add('active');
+  if (n > 0) document.getElementById(wcards[n]).style.display = 'block';
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('prog' + i);
+    d.className = 'prog-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
+  if (n === 3) buildSummary();
+  window.scrollTo(0, 0);
+}
+
+function selectShape(el) {
+  document.querySelectorAll('.shape-item').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function estimateVolume() {
+  const L = parseFloat(document.getElementById('dimL').value);
+  const W = parseFloat(document.getElementById('dimW').value);
+  const D = parseFloat(document.getElementById('dimD').value);
+  if (!L || !W || !D) { alert('Please enter all three dimensions.'); return; }
+  const shape = document.querySelector('.shape-item.selected')?.dataset.shape || 'rectangle';
+  let vol = shape === 'oval' ? Math.PI / 4 * L * W * D * 7.48
+          : shape === 'kidney' ? 0.85 * L * W * D * 7.48
+          : L * W * D * 7.48;
+  document.getElementById('poolVolume').value = Math.round(vol / 100) * 100;
+}
+
+function toggleCheck(el, groupId) {
+  document.querySelectorAll('#' + groupId + ' .check-item').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function buildSummary() {
+  const vol = document.getElementById('poolVolume').value;
+  const unit = document.getElementById('volumeUnit').value;
+  const brand = document.getElementById('swcgBrand').value;
+  const phDownSel = document.querySelector('#phDown .check-item.selected')?.dataset.val || 'muriatic';
+  const phUpSel   = document.querySelector('#phUp .check-item.selected')?.dataset.val || 'sodaash';
+  const clSel     = document.querySelector('#chlorineType .check-item.selected')?.dataset.val || 'liquidcl';
+  const names = { muriatic:'Muriatic Acid', dryacid:'Dry Acid', sodaash:'Soda Ash', bicarb:'Baking Soda', liquidcl:'Liquid Chlorine', calchhypo:'Cal-Hypo', dichlor:'Dichlor', trichlor:'Trichlor Tabs' };
+  document.getElementById('summaryBox').innerHTML = ['Pool Volume','SWCG Brand','pH Reducer','pH Increaser','Shock/Chlorine']
+    .map((label, i) => {
+      const vals = [Number(vol).toLocaleString()+' '+unit, brand, names[phDownSel], names[phUpSel], names[clSel]];
+      return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2);"><span style="color:var(--muted);font-size:14px;font-weight:600;">${label}</span><span style="font-size:14px;font-weight:700;color:var(--text);">${vals[i]}</span></div>`;
+    }).join('').replace(/border-bottom[^;]+;(?=[^<]*<\/div>\s*$)/,'');
+}
+
+function completeSetup() {
+  const vol = parseFloat(document.getElementById('poolVolume').value);
+  const unit = document.getElementById('volumeUnit').value;
+  poolProfile = {
+    volumeGal:     unit === 'liters' ? Math.round(vol * 0.264172) : Math.round(vol),
+    volumeDisplay: vol,
+    volumeUnit:    unit,
+    swcgBrand:     document.getElementById('swcgBrand').value,
+    swcgSize:      document.getElementById('swcgSize').value,
+    poolFinish:    document.getElementById('poolFinish').value,
+    batherLoad:    document.getElementById('batherLoad').value,
+    phDown:        document.querySelector('#phDown .check-item.selected')?.dataset.val || 'muriatic',
+    phUp:          document.querySelector('#phUp .check-item.selected')?.dataset.val || 'sodaash',
+    chlorineType:  document.querySelector('#chlorineType .check-item.selected')?.dataset.val || 'liquidcl',
+    saltType:      document.querySelector('#saltType .check-item.selected')?.dataset.val || 'poolsalt',
+    ownerName:     document.getElementById('ownerName').value.trim(),
+  };
+  save(KEY_PROFILE, poolProfile);
+  document.getElementById('wizardPage').classList.remove('active');
+  document.getElementById('mainNav').style.display = '';
+  updateUI();
+}
+
+// ── Live data polling ─────────────────────────────────────────────────
+let ticks = 0;
+const piUrl = () => piConnection ? `http://${piConnection.address}:${piConnection.port}` : null;
+
+async function fetchCurrent() {
+  const base = piUrl();
+  if (!base) return;
+  try {
+    const res = await fetch(base + '/api/current', { signal: AbortSignal.timeout(5000) });
+    const d = await res.json();
+    updateMetrics(d);
+  } catch (e) {
+    console.warn('Poll failed:', e);
+  }
+}
+
+function updateMetrics(d) {
+  if (d.ph        != null) document.getElementById('mPH').childNodes[0].textContent = d.ph;
+  if (d.chlorine_ppm != null) document.getElementById('mCL').childNodes[0].textContent = d.chlorine_ppm;
+  if (d.temp_f    != null) document.getElementById('mTEMP').childNodes[0].textContent = d.temp_f;
+  if (d.salinity_ppm != null) document.getElementById('mSALT').childNodes[0].textContent = Math.round(d.salinity_ppm);
+  if (d.simulated) document.getElementById('simBadge').style.display = '';
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────
+function updateUI() {
+  if (!poolProfile) return;
+  const p = poolProfile;
+  const u = p.volumeUnit === 'liters' ? 'L' : 'gal';
+  document.getElementById('chipVol').textContent  = Number(p.volumeDisplay || p.volumeGal).toLocaleString() + ' ' + u;
+  document.getElementById('chipSWCG').textContent = p.swcgBrand;
+  document.getElementById('chipChems').textContent = [p.phDown, p.phUp, p.chlorineType, p.saltType].filter(Boolean).length;
+
+  const greet = greeting() + (p.ownerName ? ', ' + p.ownerName : '');
+  document.getElementById('heroGreeting').textContent = greet;
+
+  const finishNames = { plaster:'Plaster', pebble:'Pebble Tec', vinyl:'Vinyl', fiberglass:'Fiberglass', tile:'Tile' };
+  const phDownNames = { muriatic:'Muriatic Acid', dryacid:'Dry Acid' };
+  const phUpNames   = { sodaash:'Soda Ash', bicarb:'Baking Soda' };
+  const clNames     = { liquidcl:'Liquid Cl', calchhypo:'Cal-Hypo', dichlor:'Dichlor', trichlor:'Trichlor' };
+  document.getElementById('sv-volume').textContent  = Number(p.volumeDisplay||p.volumeGal).toLocaleString() + ' ' + (p.volumeUnit||'gallons');
+  document.getElementById('sv-swcg').textContent    = p.swcgBrand + ' / ' + Number(p.swcgSize).toLocaleString()+'g';
+  document.getElementById('sv-finish').textContent  = finishNames[p.poolFinish] || p.poolFinish;
+  document.getElementById('sv-bather').textContent  = p.batherLoad;
+  document.getElementById('sv-phdown').textContent  = phDownNames[p.phDown] || p.phDown;
+  document.getElementById('sv-phup').textContent    = phUpNames[p.phUp] || p.phUp;
+  document.getElementById('sv-chlorine').textContent= clNames[p.chlorineType] || p.chlorineType;
+  if (piConnection) document.getElementById('sv-piaddr').textContent = piConnection.address + ':' + piConnection.port;
+
+  // Start polling
+  fetchCurrent();
+  setInterval(fetchCurrent, 30000);
+  setInterval(() => {
+    ticks++;
+    document.getElementById('lastUpdated').textContent = ticks < 60 ? `${ticks}s ago` : 'Live';
+    if (ticks >= 60) { ticks = 0; fetchCurrent(); }
+  }, 1000);
+}
+
+// ── AI Analysis ───────────────────────────────────────────────────────
+async function runAnalysis() {
+  if (!poolProfile) { alert('Please complete pool setup first.'); return; }
+  const base = piUrl();
+  if (!base) { alert('Not connected to Pi.'); return; }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  try {
+    const res = await fetch(base + '/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(poolProfile),
+      signal: AbortSignal.timeout(35000)
+    });
+    const report = await res.json();
+    if (report.error) throw new Error(report.error);
+    renderReport(report);
+  } catch (e) {
+    console.error(e);
+    alert('Analysis failed: ' + e.message + '\n\nMake sure aquasensiq.py is running and the Anthropic API key is set in config.yml');
+  } finally {
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+function renderReport(report) {
+  const panel   = document.getElementById('aiPanel');
+  const list    = document.getElementById('doseList');
+  const summary = document.getElementById('aiSummary');
+  document.getElementById('aiPanelTime').textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+  list.innerHTML = report.parameters.map(p => `
+    <div class="dose-card ${p.status}">
+      <div class="dose-icon">${p.icon}</div>
+      <div class="dose-content">
+        <div class="dose-param">${p.name}</div>
+        <div class="dose-reading">
+          <span>${p.current}</span>
+          <span class="arrow">→</span>
+          <span class="target">${p.target}</span>
+        </div>
+        <div class="dose-action">${p.recommendation}</div>
+        ${p.amount ? `<div class="dose-amount ${p.amountType === 'ok' ? 'green' : p.amountType === 'yellow' ? 'yellow' : 'purple'}">${p.chemical}: ${p.amount}</div>` : ''}
+        ${p.addingInstructions ? `<div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5;">${p.addingInstructions}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  let html = `<strong>Summary:</strong> ${report.overallSummary}`;
+  if (report.additionOrder) html += `<br><br><strong>Addition order:</strong> ${report.additionOrder}`;
+  summary.innerHTML = html;
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ── Navigation ────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function setNav(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+function triggerAction(btn, label) {
+  const orig = btn.textContent;
+  btn.textContent = label; btn.style.opacity = '0.6';
+  setTimeout(() => { btn.textContent = '✓ Done'; btn.style.opacity = '1'; setTimeout(() => btn.textContent = orig, 2000); }, 2000);
+}
+function resetSetup() {
+  localStorage.removeItem(KEY_PROFILE);
+  poolProfile = null;
+  location.reload();
+}
+function resetConnection() {
+  localStorage.removeItem(KEY_CONNECTION);
+  localStorage.removeItem(KEY_PROFILE);
+  location.reload();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+(function init() {
+  if (!piConnection) {
+    document.getElementById('connectPage').classList.add('active');
+  } else if (!poolProfile) {
+    document.getElementById('wizardPage').classList.add('active');
+  } else {
+    document.getElementById('mainNav').style.display = '';
+    updateUI();
+  }
+})();
+</script>
+</body>
+</html>

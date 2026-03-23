@@ -1137,7 +1137,7 @@ async function runAnalysis() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(poolProfile),
-      signal: AbortSignal.timeout(35000)
+      signal: AbortSignal.timeout(60000)
     });
     const report = await res.json();
     if (report.error) throw new Error(report.error);

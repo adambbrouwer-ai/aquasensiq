@@ -438,25 +438,21 @@
 
     <div class="connect-card">
 
-      <!-- Step 1: Enter Pi address -->
+      <!-- Step 1: Enter device code -->
       <div class="connect-steps active" id="cs0">
         <div class="connect-step-num">Getting Started</div>
-        <div class="connect-title">Connect to your Pi</div>
-        <div class="connect-desc">Enter your AquaSensiq Pi's Tailscale address below. You'll find this by running <strong>tailscale ip</strong> in your Pi's terminal. It looks like <strong>100.x.x.x</strong></div>
+        <div class="connect-title">Enter your device code</div>
+        <div class="connect-desc">Your 6-digit device code was sent to your phone when your Pi first came online. It looks like <strong>482-916</strong>. You can also find it on the sticker on the bottom of your Pi.</div>
         <div class="c-field">
-          <label class="c-label">Pi Tailscale Address</label>
-          <input type="text" class="c-input" id="piAddress" placeholder="100.x.x.x" inputmode="decimal">
+          <label class="c-label">Device Code</label>
+          <input type="text" class="c-input" id="deviceCodeInput" placeholder="000-000" inputmode="numeric" maxlength="7" autocomplete="off">
         </div>
-        <div class="c-field">
-          <label class="c-label">Port (default 5000)</label>
-          <input type="number" class="c-input" id="piPort" value="5000" inputmode="numeric">
-        </div>
-        <button class="c-btn" id="connectBtn" onclick="testConnection()">
+        <button class="c-btn" id="connectBtn" onclick="connectWithCode()">
           <div class="c-spinner"></div>
-          <span>Test Connection →</span>
+          <span>Connect My Pool →</span>
         </button>
         <div class="connect-status" id="connectStatus"></div>
-        <a class="help-link" onclick="showHelpModal()">Need help finding your Pi's address?</a>
+        <a class="help-link" onclick="showHelpModal()">Need help? Haven't received your code?</a>
       </div>
 
       <!-- Step 2: Connected confirmation -->
@@ -465,7 +461,7 @@
         <div class="connect-title">Pi found!</div>
         <div class="connect-desc">AquaSensiq is running on your Pi and ready to go. Let's set up your pool profile.</div>
         <button class="c-btn success-btn" onclick="proceedToWizard()">Set Up My Pool →</button>
-        <button class="c-btn secondary" onclick="showConnectStep(0)">← Change Address</button>
+        <button class="c-btn secondary" onclick="showConnectStep(0)">← Change Code</button>
       </div>
 
     </div>
@@ -889,7 +885,7 @@
   <div class="settings-section">
     <div class="section-head" style="padding:0 0 10px;">Connection</div>
     <div class="settings-card">
-      <div class="settings-row"><div class="settings-row-label">Pi Address</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-piaddr">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Device Code</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-piaddr">—</div><div class="settings-row-arrow">›</div></div></div>
       <div class="settings-row"><div class="settings-row-label">Connection Mode</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value">Tailscale</div><div class="settings-row-arrow">›</div></div></div>
     </div>
   </div>
@@ -942,32 +938,59 @@ function showConnectStep(n) {
   document.getElementById('cs' + n).classList.add('active');
 }
 
-async function testConnection() {
-  const addr = document.getElementById('piAddress').value.trim();
-  const port = document.getElementById('piPort').value.trim() || '5000';
-  if (!addr) { alert('Please enter your Pi\'s Tailscale address.'); return; }
+// Device code → Tailscale IP lookup table
+// You maintain this manually for Phase 1 — add each Pi's code and IP here
+// Format: 'XXX-XXX': '100.x.x.x'
+const DEVICE_REGISTRY = {
+  // Add your Pi entries here as you set them up e.g.:
+  // '482-916': '100.72.45.183',
+  '054-630': '100.88.30.118',
+};
 
+async function connectWithCode() {
+  const code = document.getElementById('deviceCodeInput').value.trim().toUpperCase();
   const btn = document.getElementById('connectBtn');
   const status = document.getElementById('connectStatus');
+
+  if (!code || code.length < 5) {
+    status.className = 'connect-status fail';
+    status.innerHTML = '✗ Please enter your 6-digit device code.';
+    status.style.display = 'flex';
+    return;
+  }
+
+  // Format code with dash if user typed without it
+  const formatted = code.includes('-') ? code : code.slice(0,3) + '-' + code.slice(3);
+
   btn.classList.add('loading'); btn.disabled = true;
   status.className = 'connect-status checking';
-  status.innerHTML = '⏳ Testing connection…'; status.style.display = 'flex';
+  status.innerHTML = '⏳ Looking up your device…'; status.style.display = 'flex';
 
-  const url = `http://${addr}:${port}/api/status`;
+  // Look up the Tailscale IP for this device code
+  const addr = DEVICE_REGISTRY[formatted];
+  if (!addr) {
+    status.className = 'connect-status fail';
+    status.innerHTML = '✗ Device code not found. Please check the code and try again, or contact support.';
+    btn.classList.remove('loading'); btn.disabled = false;
+    return;
+  }
+
+  // Test the connection
+  const url = `http://${addr}:5000/api/status`;
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
     if (res.ok) {
-      save(KEY_CONNECTION, { address: addr, port: port });
-      piConnection = { address: addr, port: port };
+      save(KEY_CONNECTION, { address: addr, port: '5000', deviceCode: formatted });
+      piConnection = { address: addr, port: '5000', deviceCode: formatted };
       status.className = 'connect-status ok';
-      status.innerHTML = '✓ Connected successfully!';
+      status.innerHTML = '✓ Device found and connected!';
       setTimeout(() => showConnectStep(1), 800);
     } else {
       throw new Error('Bad response');
     }
   } catch (e) {
     status.className = 'connect-status fail';
-    status.innerHTML = '✗ Could not reach Pi. Check the address and that aquasensiq.py is running.';
+    status.innerHTML = '✗ Could not reach your Pi. Make sure it is powered on and connected to Wi-Fi.';
   } finally {
     btn.classList.remove('loading'); btn.disabled = false;
   }
@@ -979,7 +1002,7 @@ function proceedToWizard() {
 }
 
 function showHelpModal() {
-  alert('SSH into your Pi and run:\n\n  tailscale ip\n\nCopy the number that looks like 100.x.x.x and paste it above.\n\nMake sure aquasensiq.py is running on your Pi first.');
+  alert('Your device code was sent to you via Pushover when your Pi first came online.\n\nIt is also printed on a sticker on the bottom of your Pi.\n\nIf you need help, contact support at aquasensiq.com');
 }
 
 // ── Wizard ────────────────────────────────────────────────────────────
@@ -1111,7 +1134,7 @@ function updateUI() {
   document.getElementById('sv-phdown').textContent  = phDownNames[p.phDown] || p.phDown;
   document.getElementById('sv-phup').textContent    = phUpNames[p.phUp] || p.phUp;
   document.getElementById('sv-chlorine').textContent= clNames[p.chlorineType] || p.chlorineType;
-  if (piConnection) document.getElementById('sv-piaddr').textContent = piConnection.address + ':' + piConnection.port;
+  if (piConnection) document.getElementById('sv-piaddr').textContent = piConnection.deviceCode || piConnection.address;
 
   // Start polling
   fetchCurrent();
@@ -1137,7 +1160,7 @@ async function runAnalysis() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(poolProfile),
-      signal: AbortSignal.timeout(60000)
+      signal: AbortSignal.timeout(35000)
     });
     const report = await res.json();
     if (report.error) throw new Error(report.error);

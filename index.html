@@ -417,21 +417,63 @@
   }
 
   /* ── HISTORY PAGE ── */
-  .hist-metric-tabs { display:flex; gap:8px; padding:16px 16px 0; flex-wrap:nowrap; overflow-x:auto; }
-  .hist-metric-tab { flex-shrink:0; font-size:13px; font-weight:700; padding:8px 18px; border-radius:20px; cursor:pointer; border:2px solid var(--border); color:var(--muted); background:var(--bg); transition:all 0.2s; }
-  .hist-metric-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 2px 10px rgba(0,119,182,0.25); }
-  .hist-chart-card { background:var(--card); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); margin:12px 16px 16px; }
-  .hist-chart-title { font-size:18px; font-weight:800; color:var(--text); margin-bottom:4px; }
-  .hist-chart-subtitle { font-size:13px; color:var(--muted); margin-bottom:16px; font-weight:600; }
-  .hist-chart-area { height:160px; }
-  .hist-chart-area svg { width:100%; height:100%; }
-  .hist-range-tabs { display:flex; gap:6px; margin-top:12px; }
-  .hist-range-tab { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; cursor:pointer; border:1.5px solid var(--border); color:var(--muted); background:var(--bg); }
-  .hist-range-tab.active { background:var(--primary-l); border-color:var(--primary); color:var(--primary); }
-  .hist-stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 16px 16px; }
-  .hist-stat { background:var(--card); border-radius:var(--radius-sm); padding:14px; box-shadow:var(--shadow); text-align:center; }
-  .hist-stat-val { font-size:22px; font-weight:800; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; }
-  .hist-stat-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; }
+  .hist-current-card {
+    background:var(--card); border-radius:var(--radius); padding:20px 20px 18px;
+    box-shadow:var(--shadow-md); margin:0 16px 14px;
+  }
+  .hist-current-row { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:12px; }
+  .hist-current-label { font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .hist-current-val { font-size:48px; font-weight:900; line-height:1; font-family:'Plus Jakarta Sans',sans-serif; }
+  .hist-current-unit { font-size:18px; font-weight:600; color:var(--muted); margin-left:3px; }
+  .hist-current-status { font-size:14px; font-weight:700; margin-top:6px; }
+  .hist-current-range { font-size:13px; color:var(--muted); font-weight:600; }
+  .hist-overlay-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .hist-overlay-chip {
+    display:flex; align-items:center; gap:6px;
+    background:var(--bg); border:2px solid var(--border);
+    border-radius:20px; padding:5px 12px; cursor:pointer;
+    font-size:13px; font-weight:700; color:var(--muted);
+    transition:all 0.18s; user-select:none;
+  }
+  .hist-overlay-chip.active { border-color:currentColor; background:var(--card); }
+  .hist-overlay-chip .chip-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+  .hist-chart-card {
+    background:var(--card); border-radius:var(--radius); padding:16px 16px 14px;
+    box-shadow:var(--shadow); margin:0 16px 14px; position:relative;
+  }
+  .hist-chart-wrap { position:relative; user-select:none; touch-action:pan-y; }
+  .hist-chart-svg { width:100%; display:block; overflow:visible; }
+  .hist-scrubber-line { stroke:var(--text); stroke-width:1; stroke-dasharray:4,3; opacity:0.4; pointer-events:none; }
+  .hist-scrubber-dot { pointer-events:none; }
+
+  .hist-tooltip {
+    background:var(--text); color:#fff; border-radius:10px;
+    padding:10px 14px; font-size:13px; font-weight:700; line-height:1.5;
+    position:absolute; pointer-events:none; white-space:nowrap;
+    box-shadow:0 4px 16px rgba(0,0,0,0.2); transform:translate(-50%,-100%);
+    margin-top:-12px; display:none; z-index:10;
+  }
+  .hist-tooltip::after {
+    content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%);
+    border:6px solid transparent; border-top-color:var(--text); border-bottom:0;
+  }
+  .hist-tooltip-time { font-size:11px; opacity:0.7; font-weight:600; }
+
+  .hist-range-row { display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+  .hist-range-tabs { display:flex; gap:5px; }
+  .hist-range-tab { font-size:12px; font-weight:700; padding:5px 13px; border-radius:20px; cursor:pointer; border:1.5px solid var(--border); color:var(--muted); background:var(--bg); transition:all 0.18s; }
+  .hist-range-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+  .hist-range-label { font-size:12px; color:var(--muted); font-weight:600; }
+
+  .hist-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 16px 16px; }
+  .hist-stat { background:var(--card); border-radius:var(--radius-sm); padding:12px 10px; box-shadow:var(--shadow); text-align:center; }
+  .hist-stat-val { font-size:18px; font-weight:800; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; }
+  .hist-stat-label { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; }
+
+  .hist-legend { display:flex; gap:12px; flex-wrap:wrap; padding:0 16px 4px; }
+  .hist-legend-item { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--muted); }
+  .hist-legend-line { width:20px; height:3px; border-radius:2px; }
 
   /* ── SETTINGS MODAL ── */
   .modal-overlay { position:fixed; inset:0; background:rgba(13,33,55,0.5); z-index:500; display:none; backdrop-filter:blur(4px); }
@@ -894,38 +936,68 @@
     <div class="hero-title" style="font-size:26px;">Water Quality History</div>
   </div>
 
-  <div class="hist-metric-tabs" id="histTabs">
-    <div class="hist-metric-tab active" data-metric="ph" onclick="setHistoryMetric('ph')">pH</div>
-    <div class="hist-metric-tab" data-metric="cl" onclick="setHistoryMetric('cl')">Chlorine</div>
-    <div class="hist-metric-tab" data-metric="temp" onclick="setHistoryMetric('temp')">Temperature</div>
-    <div class="hist-metric-tab" data-metric="salt" onclick="setHistoryMetric('salt')">Salinity</div>
+  <!-- Current reading card -->
+  <div class="hist-current-card">
+    <div class="hist-current-row">
+      <div>
+        <div class="hist-current-label" id="histCurrentLabel">pH Level</div>
+        <div style="display:flex;align-items:baseline;gap:2px;">
+          <div class="hist-current-val" id="histCurrentVal" style="color:var(--primary);">7.4</div>
+          <div class="hist-current-unit" id="histCurrentUnit"></div>
+        </div>
+        <div class="hist-current-status status-ok" id="histCurrentStatus">✓ Within target range</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="hist-current-range" id="histCurrentRange">Target: 7.2 – 7.6</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;font-weight:600;" id="histCurrentTime">Just now</div>
+      </div>
+    </div>
+    <!-- Overlay chips -->
+    <div style="font-size:12px;font-weight:800;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;">Overlay</div>
+    <div class="hist-overlay-row" id="overlayChips">
+      <div class="hist-overlay-chip active" data-metric="ph" style="color:#0077B6;" onclick="toggleOverlay('ph')">
+        <div class="chip-dot" style="background:#0077B6;"></div>pH
+      </div>
+      <div class="hist-overlay-chip" data-metric="cl" style="color:#00B4D8;" onclick="toggleOverlay('cl')">
+        <div class="chip-dot" style="background:#00B4D8;"></div>Chlorine
+      </div>
+      <div class="hist-overlay-chip" data-metric="temp" style="color:#E07B00;" onclick="toggleOverlay('temp')">
+        <div class="chip-dot" style="background:#E07B00;"></div>Temp
+      </div>
+      <div class="hist-overlay-chip" data-metric="salt" style="color:#06A77D;" onclick="toggleOverlay('salt')">
+        <div class="chip-dot" style="background:#06A77D;"></div>Salt
+      </div>
+    </div>
   </div>
 
+  <!-- Interactive chart -->
   <div class="hist-chart-card">
-    <div class="hist-chart-title" id="histChartTitle">pH Level</div>
-    <div class="hist-chart-subtitle" id="histChartSubtitle">Target range: 7.2 – 7.6</div>
-    <div class="hist-chart-area">
-      <svg id="histSvg" viewBox="0 0 300 140" preserveAspectRatio="none">
-        <line x1="0" y1="28" x2="300" y2="28" stroke="var(--border2)" stroke-width="1"/>
-        <line x1="0" y1="56" x2="300" y2="56" stroke="var(--border2)" stroke-width="1"/>
-        <line x1="0" y1="84" x2="300" y2="84" stroke="var(--border2)" stroke-width="1"/>
-        <line x1="0" y1="112" x2="300" y2="112" stroke="var(--border2)" stroke-width="1"/>
-        <rect id="histTargetZone" x="0" y="40" width="300" height="40" fill="rgba(6,167,125,0.07)"/>
-        <polyline id="histLine" points="0,90 50,82 100,74 150,66 200,55 250,44 300,36"
-          fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <polyline id="histFill" points="0,90 50,82 100,74 150,66 200,55 250,44 300,36 300,140 0,140"
-          fill="rgba(0,119,182,0.07)" stroke="none"/>
-        <circle id="histDot" cx="300" cy="36" r="5" fill="var(--primary)"/>
-      </svg>
+    <div class="hist-chart-wrap" id="chartWrap">
+      <svg class="hist-chart-svg" id="histChartSvg" viewBox="0 0 360 200" preserveAspectRatio="none"></svg>
+      <div class="hist-tooltip" id="histTooltip">
+        <div class="hist-tooltip-time" id="tooltipTime">—</div>
+        <div id="tooltipValues">—</div>
+      </div>
     </div>
-    <div class="hist-range-tabs">
-      <div class="hist-range-tab active" onclick="setHistRange(this,'24h')">24h</div>
-      <div class="hist-range-tab" onclick="setHistRange(this,'7d')">7 days</div>
-      <div class="hist-range-tab" onclick="setHistRange(this,'30d')">30 days</div>
+    <div class="hist-range-row">
+      <div class="hist-range-tabs">
+        <div class="hist-range-tab active" data-range="24h" onclick="setHistRange(this,'24h')">24h</div>
+        <div class="hist-range-tab" data-range="7d" onclick="setHistRange(this,'7d')">7 days</div>
+        <div class="hist-range-tab" data-range="30d" onclick="setHistRange(this,'30d')">30 days</div>
+      </div>
+      <div class="hist-range-label" id="histRangeLabel">Last 24 hours</div>
     </div>
   </div>
 
+  <!-- Legend -->
+  <div class="hist-legend" id="histLegend"></div>
+
+  <!-- Stats -->
   <div class="hist-stats-row">
+    <div class="hist-stat">
+      <div class="hist-stat-val" id="histCurrent2">—</div>
+      <div class="hist-stat-label">Current</div>
+    </div>
     <div class="hist-stat">
       <div class="hist-stat-val" id="histMin">—</div>
       <div class="hist-stat-label">Min</div>
@@ -1298,7 +1370,7 @@ function updateUI() {
   if (piConnection) document.getElementById('sv-piaddr').textContent = piConnection.deviceCode || piConnection.address;
   loadNotifPrefs();
   // Init history page
-  setHistoryMetric('ph');
+  initHistory();
 
   // Start polling
   fetchCurrent();
@@ -1417,38 +1489,321 @@ function showHistory(metric) {
   setHistoryMetric(metric);
 }
 
-// ── History page ──────────────────────────────────────────────────────
-const HIST_CONFIG = {
-  ph:   { title:'pH Level', subtitle:'Target range: 7.2 – 7.6', color:'var(--primary)', min:6.8, max:8.2, targetY1:40, targetH:40 },
-  cl:   { title:'Free Chlorine', subtitle:'Target range: 3 – 5 ppm', color:'var(--aqua)', min:0, max:8, targetY1:45, targetH:35 },
-  temp: { title:'Temperature', subtitle:'Ideal range: 26 – 30°C', color:'var(--warn)', min:18, max:36, targetY1:40, targetH:40 },
-  salt: { title:'Salinity', subtitle:'Target range: 2700 – 3400 ppm', color:'var(--success)', min:2000, max:4000, targetY1:38, targetH:44 },
+// ═══════════════ HISTORY CHART ENGINE ═══════════════════════════════
+
+const METRIC_CFG = {
+  ph:   { label:'pH Level',        unit:'',     color:'#0077B6', targetMin:7.2, targetMax:7.6, yMin:6.5,  yMax:8.5,  decimals:1, rangeText:'Target: 7.2 – 7.6' },
+  cl:   { label:'Free Chlorine',   unit:'ppm',  color:'#00B4D8', targetMin:3.0, targetMax:5.0, yMin:0,    yMax:8,    decimals:1, rangeText:'Target: 3 – 5 ppm' },
+  temp: { label:'Temperature',     unit:'°C',   color:'#E07B00', targetMin:26,  targetMax:30,  yMin:15,   yMax:38,   decimals:1, rangeText:'Ideal: 26 – 30°C' },
+  salt: { label:'Salinity',        unit:'ppm',  color:'#06A77D', targetMin:2700,targetMax:3400,yMin:2000, yMax:4000, decimals:0, rangeText:'Target: 2700 – 3400 ppm' },
 };
 
-let currentHistMetric = 'ph';
+// SVG chart dimensions
+const CX = { left:44, right:10, top:10, bottom:28, width:360, height:200 };
+const CHART_W = CX.width  - CX.left - CX.right;
+const CHART_H = CX.height - CX.top  - CX.bottom;
 
-function setHistoryMetric(metric) {
-  currentHistMetric = metric;
-  document.querySelectorAll('.hist-metric-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.metric === metric);
+let activeMetrics   = new Set(['ph']);  // which metrics are overlaid
+let currentRange    = '24h';
+let historyData     = {};               // metric -> array of {ts, val}
+let scrubberIndex   = null;
+
+// ── Simulated data generation ──────────────────────────────────────────
+function generateSimData(metric, range) {
+  const cfg = METRIC_CFG[metric];
+  const now = Date.now();
+  const points = range === '24h' ? 48 : range === '7d' ? 84 : 90;
+  const interval = range === '24h' ? 30*60*1000 : range === '7d' ? 2*60*60*1000 : 8*60*60*1000;
+  const mid = (cfg.targetMin + cfg.targetMax) / 2;
+  const spread = (cfg.targetMax - cfg.targetMin) * 0.8;
+  let val = mid + (Math.random() - 0.5) * spread;
+  const data = [];
+  for (let i = points; i >= 0; i--) {
+    val += (Math.random() - 0.48) * spread * 0.15;
+    val = Math.max(cfg.yMin + (cfg.yMax - cfg.yMin)*0.05, Math.min(cfg.yMax - (cfg.yMax-cfg.yMin)*0.05, val));
+    data.push({ ts: now - i * interval, val: parseFloat(val.toFixed(cfg.decimals)) });
+  }
+  return data;
+}
+
+function ensureData(metric, range) {
+  const key = metric + '_' + range;
+  if (!historyData[key]) historyData[key] = generateSimData(metric, range);
+  return historyData[key];
+}
+
+// ── Coordinate helpers ─────────────────────────────────────────────────
+function valToY(val, yMin, yMax) {
+  return CX.top + CHART_H - ((val - yMin) / (yMax - yMin)) * CHART_H;
+}
+function idxToX(i, total) {
+  return CX.left + (i / (total - 1)) * CHART_W;
+}
+
+// ── Build SVG content ──────────────────────────────────────────────────
+function buildChart() {
+  const svg = document.getElementById('histChartSvg');
+  const ns = 'http://www.w3.org/2000/svg';
+
+  // Determine Y scale from first (primary) metric
+  const primary = [...activeMetrics][0];
+  const pCfg = METRIC_CFG[primary];
+  const yMin = pCfg.yMin;
+  const yMax = pCfg.yMax;
+
+  let svgContent = '';
+
+  // Gridlines + Y axis labels
+  const steps = 5;
+  for (let i = 0; i <= steps; i++) {
+    const v = yMin + (yMax - yMin) * (i / steps);
+    const y = valToY(v, yMin, yMax);
+    const label = pCfg.decimals > 0 ? v.toFixed(1) : Math.round(v).toString();
+    svgContent += `<line x1="${CX.left}" y1="${y}" x2="${CX.left + CHART_W}" y2="${y}" stroke="#E2EEF8" stroke-width="1"/>`;
+    svgContent += `<text x="${CX.left - 4}" y="${y + 4}" text-anchor="end" font-size="9" fill="#8AAAC8" font-family="Nunito,sans-serif" font-weight="700">${label}</text>`;
+  }
+
+  // Target zone for primary metric
+  const tzTop = valToY(pCfg.targetMax, yMin, yMax);
+  const tzBot = valToY(pCfg.targetMin, yMin, yMax);
+  svgContent += `<rect x="${CX.left}" y="${tzTop}" width="${CHART_W}" height="${tzBot - tzTop}" fill="rgba(6,167,125,0.07)"/>`;
+
+  // X axis labels
+  const data0 = ensureData(primary, currentRange);
+  const total = data0.length;
+  const labelCount = 5;
+  for (let i = 0; i < labelCount; i++) {
+    const di = Math.round(i / (labelCount - 1) * (total - 1));
+    const x = idxToX(di, total);
+    const d = new Date(data0[di].ts);
+    let label;
+    if (currentRange === '24h') {
+      label = d.getHours().toString().padStart(2,'0') + ':00';
+    } else if (currentRange === '7d') {
+      label = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    } else {
+      label = (d.getDate()) + '/' + (d.getMonth()+1);
+    }
+    svgContent += `<text x="${x}" y="${CX.top + CHART_H + 18}" text-anchor="middle" font-size="9" fill="#8AAAC8" font-family="Nunito,sans-serif" font-weight="700">${label}</text>`;
+  }
+
+  // Axis line
+  svgContent += `<line x1="${CX.left}" y1="${CX.top}" x2="${CX.left}" y2="${CX.top + CHART_H}" stroke="#C5DCF0" stroke-width="1"/>`;
+  svgContent += `<line x1="${CX.left}" y1="${CX.top + CHART_H}" x2="${CX.left + CHART_W}" y2="${CX.top + CHART_H}" stroke="#C5DCF0" stroke-width="1"/>`;
+
+  // Draw each active metric's line
+  const metricsArr = [...activeMetrics];
+  metricsArr.forEach((metric, mi) => {
+    const cfg = METRIC_CFG[metric];
+    const data = ensureData(metric, currentRange);
+    // Use primary y scale for all, but secondary metrics may overflow — that's intentional for overlay
+    const mYMin = (mi === 0) ? yMin : METRIC_CFG[metric].yMin;
+    const mYMax = (mi === 0) ? yMax : METRIC_CFG[metric].yMax;
+
+    const pts = data.map((d, i) => `${idxToX(i, data.length)},${valToY(d.val, mYMin, mYMax)}`);
+    const fillPts = [...pts, `${idxToX(data.length-1, data.length)},${CX.top+CHART_H}`, `${CX.left},${CX.top+CHART_H}`];
+
+    const hexColor = cfg.color;
+    // Parse hex for rgba fill
+    const r = parseInt(hexColor.slice(1,3),16);
+    const g = parseInt(hexColor.slice(3,5),16);
+    const b = parseInt(hexColor.slice(5,7),16);
+
+    if (mi === 0) {
+      svgContent += `<polyline points="${fillPts.join(' ')}" fill="rgba(${r},${g},${b},0.06)" stroke="none"/>`;
+    }
+    svgContent += `<polyline points="${pts.join(' ')}" fill="none" stroke="${hexColor}" stroke-width="${mi===0?2.5:2}" stroke-linecap="round" stroke-linejoin="round" opacity="${mi===0?1:0.7}"/>`;
+
+    // Latest dot
+    const last = data[data.length-1];
+    const lx = idxToX(data.length-1, data.length);
+    const ly = valToY(last.val, mYMin, mYMax);
+    svgContent += `<circle cx="${lx}" cy="${ly}" r="4" fill="${hexColor}"/>`;
+    svgContent += `<circle cx="${lx}" cy="${ly}" r="8" fill="${hexColor}" opacity="0.15"/>`;
   });
-  const cfg = HIST_CONFIG[metric];
-  document.getElementById('histChartTitle').textContent = cfg.title;
-  document.getElementById('histChartSubtitle').textContent = cfg.subtitle;
-  document.getElementById('histTargetZone').setAttribute('y', cfg.targetY1);
-  document.getElementById('histTargetZone').setAttribute('height', cfg.targetH);
-  document.getElementById('histLine').setAttribute('stroke', cfg.color);
-  // Update stats with placeholder values
-  const stats = { ph:{min:'7.1',avg:'7.4',max:'7.8'}, cl:{min:'1.8',avg:'2.9',max:'4.2'}, temp:{min:'24',avg:'27',max:'29'}, salt:{min:'3050',avg:'3180',max:'3290'} };
-  const s = stats[metric];
-  document.getElementById('histMin').textContent = s.min;
-  document.getElementById('histAvg').textContent = s.avg;
-  document.getElementById('histMax').textContent = s.max;
+
+  // Scrubber (hidden by default)
+  svgContent += `<line id="scrubberLine" x1="100" y1="${CX.top}" x2="100" y2="${CX.top+CHART_H}" class="hist-scrubber-line" visibility="hidden"/>`;
+  metricsArr.forEach(metric => {
+    const cfg = METRIC_CFG[metric];
+    svgContent += `<circle id="scrubDot_${metric}" class="hist-scrubber-dot" cx="100" cy="100" r="5" fill="${cfg.color}" stroke="#fff" stroke-width="2" visibility="hidden"/>`;
+  });
+
+  svg.innerHTML = svgContent;
+
+  // Touch / click interaction
+  const wrap = document.getElementById('chartWrap');
+  wrap.addEventListener('click', onChartInteract);
+  wrap.addEventListener('touchmove', (e) => { e.preventDefault(); onChartInteract(e.touches[0]); }, { passive:false });
+  wrap.addEventListener('touchend', hideScrubber);
+
+  updateLegend();
+  updateStats();
+}
+
+function onChartInteract(e) {
+  const svg = document.getElementById('histChartSvg');
+  const rect = svg.getBoundingClientRect();
+  const clientX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+  const relX = (clientX - rect.left) / rect.width * CX.width;
+  const chartX = relX - CX.left;
+
+  const primary = [...activeMetrics][0];
+  const data = ensureData(primary, currentRange);
+  const idx = Math.round((chartX / CHART_W) * (data.length - 1));
+  const clampedIdx = Math.max(0, Math.min(data.length - 1, idx));
+
+  showScrubber(clampedIdx);
+}
+
+function showScrubber(idx) {
+  scrubberIndex = idx;
+  const primary = [...activeMetrics][0];
+  const pCfg = METRIC_CFG[primary];
+  const data = ensureData(primary, currentRange);
+  const x = idxToX(idx, data.length);
+
+  const line = document.getElementById('scrubberLine');
+  if (line) { line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('visibility', 'visible'); }
+
+  let tooltipLines = [];
+  let firstY = null;
+
+  activeMetrics.forEach(metric => {
+    const cfg = METRIC_CFG[metric];
+    const mData = ensureData(metric, currentRange);
+    const mIdx = Math.min(idx, mData.length - 1);
+    const point = mData[mIdx];
+    const mYMin = metric === primary ? pCfg.yMin : METRIC_CFG[metric].yMin;
+    const mYMax = metric === primary ? pCfg.yMax : METRIC_CFG[metric].yMax;
+    const y = valToY(point.val, mYMin, mYMax);
+    if (firstY === null) firstY = y;
+
+    const dot = document.getElementById('scrubDot_' + metric);
+    if (dot) { dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('visibility', 'visible'); }
+
+    const valStr = cfg.decimals > 0 ? point.val.toFixed(cfg.decimals) : Math.round(point.val).toString();
+    tooltipLines.push(`<span style="color:${cfg.color};font-weight:800;">${cfg.label.split(' ')[0]}: ${valStr}${cfg.unit}</span>`);
+  });
+
+  // Position tooltip
+  const point = data[idx];
+  const d = new Date(point.ts);
+  let timeStr;
+  if (currentRange === '24h') timeStr = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  else timeStr = d.toLocaleDateString([], {weekday:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  const tooltip = document.getElementById('histTooltip');
+  const svg = document.getElementById('histChartSvg');
+  const rect = svg.getBoundingClientRect();
+  const svgX = x / CX.width * rect.width;
+  const svgY = (firstY || 80) / CX.height * rect.height;
+  tooltip.style.left = Math.max(60, Math.min(rect.width - 60, svgX)) + 'px';
+  tooltip.style.top = Math.max(50, svgY - 8) + 'px';
+  tooltip.style.display = 'block';
+  document.getElementById('tooltipTime').textContent = timeStr;
+  document.getElementById('tooltipValues').innerHTML = tooltipLines.join('<br>');
+}
+
+function hideScrubber() {
+  document.getElementById('scrubberLine')?.setAttribute('visibility', 'hidden');
+  activeMetrics.forEach(m => document.getElementById('scrubDot_' + m)?.setAttribute('visibility', 'hidden'));
+  document.getElementById('histTooltip').style.display = 'none';
+  scrubberIndex = null;
+}
+
+// ── Overlay toggle ─────────────────────────────────────────────────────
+function toggleOverlay(metric) {
+  if (activeMetrics.has(metric) && activeMetrics.size === 1) return; // keep at least one
+  if (activeMetrics.has(metric)) {
+    activeMetrics.delete(metric);
+  } else {
+    activeMetrics.add(metric);
+  }
+  document.querySelectorAll('.hist-overlay-chip').forEach(c => {
+    c.classList.toggle('active', activeMetrics.has(c.dataset.metric));
+  });
+  hideScrubber();
+  buildChart();
+  updateCurrentCard();
+}
+
+// ── Current reading card ───────────────────────────────────────────────
+function updateCurrentCard() {
+  const primary = [...activeMetrics][0];
+  const cfg = METRIC_CFG[primary];
+  const data = ensureData(primary, currentRange);
+  const latest = data[data.length - 1];
+  const val = latest.val;
+  const valStr = cfg.decimals > 0 ? val.toFixed(cfg.decimals) : Math.round(val).toString();
+
+  document.getElementById('histCurrentLabel').textContent = cfg.label;
+  document.getElementById('histCurrentVal').textContent = valStr;
+  document.getElementById('histCurrentVal').style.color = cfg.color;
+  document.getElementById('histCurrentUnit').textContent = cfg.unit;
+  document.getElementById('histCurrentRange').textContent = cfg.rangeText;
+  document.getElementById('histCurrent2').textContent = valStr + cfg.unit;
+
+  const inRange = val >= cfg.targetMin && val <= cfg.targetMax;
+  const hi = val > cfg.targetMax;
+  const el = document.getElementById('histCurrentStatus');
+  if (inRange) { el.textContent = '✓ Within target range'; el.className = 'hist-current-status status-ok'; }
+  else if (hi)  { el.textContent = '⬆ Above target range'; el.className = 'hist-current-status status-warn'; }
+  else          { el.textContent = '⬇ Below target range'; el.className = 'hist-current-status status-warn'; }
+
+  const d = new Date(latest.ts);
+  document.getElementById('histCurrentTime').textContent = 'Updated ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+
+function updateStats() {
+  const primary = [...activeMetrics][0];
+  const cfg = METRIC_CFG[primary];
+  const data = ensureData(primary, currentRange);
+  const vals = data.map(d => d.val);
+  const mn = Math.min(...vals);
+  const mx = Math.max(...vals);
+  const avg = vals.reduce((a,b) => a+b, 0) / vals.length;
+  const fmt = v => cfg.decimals > 0 ? v.toFixed(1) : Math.round(v).toString();
+  document.getElementById('histMin').textContent = fmt(mn) + cfg.unit;
+  document.getElementById('histAvg').textContent = fmt(avg) + cfg.unit;
+  document.getElementById('histMax').textContent = fmt(mx) + cfg.unit;
+}
+
+function updateLegend() {
+  const legend = document.getElementById('histLegend');
+  if (activeMetrics.size <= 1) { legend.innerHTML = ''; return; }
+  legend.innerHTML = [...activeMetrics].map(m => {
+    const cfg = METRIC_CFG[m];
+    return `<div class="hist-legend-item"><div class="hist-legend-line" style="background:${cfg.color};"></div>${cfg.label} (${cfg.unit || 'no unit'})</div>`;
+  }).join('');
 }
 
 function setHistRange(el, range) {
   document.querySelectorAll('.hist-range-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  currentRange = range;
+  const labels = { '24h':'Last 24 hours', '7d':'Last 7 days', '30d':'Last 30 days' };
+  document.getElementById('histRangeLabel').textContent = labels[range];
+  hideScrubber();
+  buildChart();
+  updateCurrentCard();
+}
+
+function showHistory(metric) {
+  activeMetrics = new Set([metric]);
+  document.querySelectorAll('.hist-overlay-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.metric === metric);
+  });
+  showPage('histPage');
+  const nav = document.querySelector('.nav-item[data-page="histPage"]');
+  if (nav) setNav(nav);
+  buildChart();
+  updateCurrentCard();
+}
+
+function initHistory() {
+  buildChart();
+  updateCurrentCard();
 }
 
 // ── Settings inline editing ────────────────────────────────────────────

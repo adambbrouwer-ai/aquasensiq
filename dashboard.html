@@ -345,6 +345,7 @@
   .metric-range { font-size:12px; color:var(--muted); margin-top:4px; font-weight:600; }
   .sparkline { margin-top:10px; height:32px; }
   .sparkline svg { width:100%; height:100%; }
+  .sparkline-tap { font-size:10px; color:var(--muted2); font-weight:700; text-align:center; margin-top:3px; letter-spacing:0.3px; }
 
   /* ── SECTION HEAD ── */
   .section-head { padding:20px 20px 10px; font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
@@ -387,16 +388,18 @@
 
   /* ── ALERT BANNER ── */
   .alert-banner {
-    background:var(--card); border-radius:var(--radius-sm); padding:14px 16px;
-    box-shadow:var(--shadow); margin-bottom:14px;
-    display:flex; align-items:flex-start; gap:12px;
-    border-left:4px solid var(--warn);
+    background:var(--warn-l); border:2px solid #FFD9A0;
+    border-radius:var(--radius-sm); padding:16px 18px;
+    box-shadow:var(--shadow-md); margin-bottom:16px;
+    display:flex; align-items:flex-start; gap:14px;
   }
-  .alert-banner.danger { border-left-color:var(--danger); }
-  .alert-icon { font-size:22px; flex-shrink:0; }
-  .alert-text { font-size:14px; line-height:1.5; }
-  .alert-text strong { display:block; margin-bottom:2px; color:var(--warn); font-size:15px; }
+  .alert-banner.danger { background:var(--danger-l); border-color:#F5B8BE; }
+  .alert-icon { font-size:26px; flex-shrink:0; margin-top:1px; }
+  .alert-text { font-size:14px; line-height:1.55; flex:1; }
+  .alert-text strong { display:block; margin-bottom:3px; color:var(--warn); font-size:16px; font-weight:800; }
   .alert-banner.danger .alert-text strong { color:var(--danger); }
+  .alert-tap-hint { font-size:12px; color:var(--warn); font-weight:700; margin-top:6px; opacity:0.8; }
+  .alert-banner.danger .alert-tap-hint { color:var(--danger); }
 
   /* ── SETTINGS PAGE ── */
   .settings-section { padding:0 16px; margin-bottom:20px; }
@@ -412,6 +415,48 @@
     color:var(--danger); font-family:'Nunito',sans-serif; font-size:15px; font-weight:800;
     padding:14px; border-radius:14px; cursor:pointer; margin-top:8px;
   }
+
+  /* ── HISTORY PAGE ── */
+  .hist-metric-tabs { display:flex; gap:8px; padding:16px 16px 0; flex-wrap:nowrap; overflow-x:auto; }
+  .hist-metric-tab { flex-shrink:0; font-size:13px; font-weight:700; padding:8px 18px; border-radius:20px; cursor:pointer; border:2px solid var(--border); color:var(--muted); background:var(--bg); transition:all 0.2s; }
+  .hist-metric-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 2px 10px rgba(0,119,182,0.25); }
+  .hist-chart-card { background:var(--card); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); margin:12px 16px 16px; }
+  .hist-chart-title { font-size:18px; font-weight:800; color:var(--text); margin-bottom:4px; }
+  .hist-chart-subtitle { font-size:13px; color:var(--muted); margin-bottom:16px; font-weight:600; }
+  .hist-chart-area { height:160px; }
+  .hist-chart-area svg { width:100%; height:100%; }
+  .hist-range-tabs { display:flex; gap:6px; margin-top:12px; }
+  .hist-range-tab { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; cursor:pointer; border:1.5px solid var(--border); color:var(--muted); background:var(--bg); }
+  .hist-range-tab.active { background:var(--primary-l); border-color:var(--primary); color:var(--primary); }
+  .hist-stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 16px 16px; }
+  .hist-stat { background:var(--card); border-radius:var(--radius-sm); padding:14px; box-shadow:var(--shadow); text-align:center; }
+  .hist-stat-val { font-size:22px; font-weight:800; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; }
+  .hist-stat-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; }
+
+  /* ── SETTINGS MODAL ── */
+  .modal-overlay { position:fixed; inset:0; background:rgba(13,33,55,0.5); z-index:500; display:none; backdrop-filter:blur(4px); }
+  .modal-overlay.active { display:block; animation:fadeIn 0.2s ease; }
+  @keyframes fadeIn { from{opacity:0;}to{opacity:1;} }
+  .bottom-sheet { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:var(--card); border-radius:24px 24px 0 0; padding:0 0 40px; z-index:501; transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.32,0.72,0,1); }
+  .bottom-sheet.active { transform:translateY(0); }
+  .sheet-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 20px; }
+  .sheet-title { font-size:18px; font-weight:800; color:var(--text); padding:0 24px 16px; border-bottom:1px solid var(--border2); }
+  .sheet-body { padding:20px 24px; }
+  .sheet-footer { padding:0 24px; display:flex; gap:10px; }
+  .sheet-btn-primary { flex:1; background:var(--primary); color:#fff; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; padding:14px; border-radius:14px; border:none; cursor:pointer; }
+  .sheet-btn-secondary { flex:1; background:var(--bg); color:var(--muted); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; padding:14px; border-radius:14px; border:2px solid var(--border); cursor:pointer; }
+
+  /* ── TOGGLE SWITCH ── */
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border2); }
+  .toggle-row:last-child { border-bottom:none; }
+  .toggle-label { font-size:16px; font-weight:700; color:var(--text); }
+  .toggle-sub { font-size:13px; color:var(--muted); margin-top:2px; font-weight:500; }
+  .toggle { position:relative; width:48px; height:26px; flex-shrink:0; }
+  .toggle input { opacity:0; width:0; height:0; }
+  .toggle-slider { position:absolute; inset:0; background:var(--border); border-radius:13px; cursor:pointer; transition:background 0.2s; }
+  .toggle-slider:before { content:''; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:transform 0.2s; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+  .toggle input:checked + .toggle-slider { background:var(--primary); }
+  .toggle input:checked + .toggle-slider:before { transform:translateX(22px); }
 
   /* ── BOTTOM NAV ── */
   .bottom-nav {
@@ -491,16 +536,31 @@
         <div class="step-desc">The most important number for calculating chemical doses. Check your pool builder paperwork, or estimate using the shape calculator below.</div>
 
         <div class="field-group">
-          <label class="field-label">Pool Volume</label>
-          <input type="number" class="field-input" id="poolVolume" placeholder="e.g. 15000" inputmode="numeric">
+          <label class="field-label">Measurement Units</label>
+          <div class="check-grid" id="unitsSelector">
+            <div class="check-item selected" data-units="metric" onclick="selectUnits(this)">
+              <div class="check-item-name">Metric</div>
+              <div class="check-item-note">Litres, metres, °C</div>
+            </div>
+            <div class="check-item" data-units="imperial" onclick="selectUnits(this)">
+              <div class="check-item-name">Imperial</div>
+              <div class="check-item-note">Gallons, feet, °F</div>
+            </div>
+          </div>
         </div>
+
         <div class="field-group">
+          <label class="field-label">Pool Volume</label>
+          <input type="number" class="field-input" id="poolVolume" placeholder="e.g. 50000" inputmode="numeric">
+        </div>
+        <div class="field-group" style="display:none;">
           <label class="field-label">Units</label>
           <select class="field-input" id="volumeUnit">
+            <option value="liters" selected>Litres (L)</option>
             <option value="gallons">US Gallons</option>
-            <option value="liters">Liters</option>
           </select>
         </div>
+        <div id="volumeUnitDisplay" style="font-size:13px;color:var(--muted);font-weight:700;margin:-8px 0 14px;padding-left:2px;">Litres (L)</div>
 
         <div style="margin-bottom:18px;">
           <div class="field-label" style="margin-bottom:10px;">Or estimate by pool shape</div>
@@ -521,7 +581,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Dimensions (feet)</label>
+          <label class="field-label" id="dimLabel">Dimensions (metres)</label>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
             <input type="number" class="field-input" id="dimL" placeholder="Length" inputmode="decimal">
             <input type="number" class="field-input" id="dimW" placeholder="Width" inputmode="decimal">
@@ -544,10 +604,21 @@
         <div class="field-group">
           <label class="field-label">Salt Chlorine Generator Brand</label>
           <select class="field-input" id="swcgBrand">
-            <option value="Pentair">Pentair IntelliChlor</option>
-            <option value="Hayward">Hayward AquaRite</option>
-            <option value="Jandy">Jandy TruClear</option>
-            <option value="CircuPool">CircuPool</option>
+            <optgroup label="Australian Brands">
+              <option value="Astral">Astral Pool (Viron / E-Series)</option>
+              <option value="Zodiac">Zodiac (Tri Expert / LM)</option>
+              <option value="Waterco">Waterco (Hydrochlor)</option>
+              <option value="Chloromatic">Chloromatic</option>
+              <option value="Davey">Davey (Crystal Clear)</option>
+              <option value="Maytronics">Maytronics</option>
+            </optgroup>
+            <optgroup label="International Brands">
+              <option value="Pentair">Pentair IntelliChlor</option>
+              <option value="Hayward">Hayward AquaRite</option>
+              <option value="Jandy">Jandy TruClear</option>
+              <option value="CircuPool">CircuPool</option>
+              <option value="Jacuzzi">Jacuzzi</option>
+            </optgroup>
             <option value="Other">Other / Unknown</option>
           </select>
         </div>
@@ -595,12 +666,12 @@
           <div class="field-label" style="margin-bottom:8px;">pH Reducer</div>
           <div class="check-grid" id="phDown">
             <div class="check-item selected" data-val="muriatic" onclick="toggleCheck(this,'phDown')">
-              <div class="check-item-name">Muriatic Acid</div>
-              <div class="check-item-note">Liquid, 31.45%</div>
+              <div class="check-item-name">Hydrochloric Acid</div>
+              <div class="check-item-note">HCl liquid (Pool acid)</div>
             </div>
             <div class="check-item" data-val="dryacid" onclick="toggleCheck(this,'phDown')">
               <div class="check-item-name">Dry Acid</div>
-              <div class="check-item-note">Sodium bisulfate</div>
+              <div class="check-item-note">Lo-Chlor / BioGuard pH Minus</div>
             </div>
           </div>
         </div>
@@ -610,11 +681,11 @@
           <div class="check-grid" id="phUp">
             <div class="check-item selected" data-val="sodaash" onclick="toggleCheck(this,'phUp')">
               <div class="check-item-name">Soda Ash</div>
-              <div class="check-item-note">Sodium carbonate</div>
+              <div class="check-item-note">Lo-Chlor / BioGuard PH Up</div>
             </div>
             <div class="check-item" data-val="bicarb" onclick="toggleCheck(this,'phUp')">
-              <div class="check-item-name">Baking Soda</div>
-              <div class="check-item-note">Sodium bicarbonate</div>
+              <div class="check-item-name">Buffer / Bicarb</div>
+              <div class="check-item-note">Alkalinity increaser</div>
             </div>
           </div>
         </div>
@@ -624,19 +695,19 @@
           <div class="check-grid" id="chlorineType">
             <div class="check-item selected" data-val="liquidcl" onclick="toggleCheck(this,'chlorineType')">
               <div class="check-item-name">Liquid Chlorine</div>
-              <div class="check-item-note">10–12.5% sodium hypochlorite</div>
+              <div class="check-item-note">12.5% sodium hypochlorite</div>
+            </div>
+            <div class="check-item" data-val="granularcl" onclick="toggleCheck(this,'chlorineType')">
+              <div class="check-item-name">Granular Chlorine</div>
+              <div class="check-item-note">Lo-Chlor / HTH / Zodiac</div>
             </div>
             <div class="check-item" data-val="calchhypo" onclick="toggleCheck(this,'chlorineType')">
               <div class="check-item-name">Cal-Hypo</div>
               <div class="check-item-note">Granular, 65–73%</div>
             </div>
             <div class="check-item" data-val="dichlor" onclick="toggleCheck(this,'chlorineType')">
-              <div class="check-item-name">Dichlor</div>
-              <div class="check-item-note">Granular, 56–62%</div>
-            </div>
-            <div class="check-item" data-val="trichlor" onclick="toggleCheck(this,'chlorineType')">
-              <div class="check-item-name">Trichlor Tabs</div>
-              <div class="check-item-note">90%</div>
+              <div class="check-item-name">Stabilised Granules</div>
+              <div class="check-item-note">Dichlor, 56–62%</div>
             </div>
           </div>
         </div>
@@ -646,11 +717,11 @@
           <div class="check-grid" id="saltType">
             <div class="check-item selected" data-val="poolsalt" onclick="toggleCheck(this,'saltType')">
               <div class="check-item-name">Pool Salt</div>
-              <div class="check-item-note">99%+ NaCl</div>
+              <div class="check-item-note">99%+ NaCl (Bunnings etc.)</div>
             </div>
-            <div class="check-item" data-val="solarsalt" onclick="toggleCheck(this,'saltType')">
-              <div class="check-item-name">Solar Salt</div>
-              <div class="check-item-note">Pellets, ~99% NaCl</div>
+            <div class="check-item" data-val="chloromaticsalt" onclick="toggleCheck(this,'saltType')">
+              <div class="check-item-name">Chloromatic Salt</div>
+              <div class="check-item-note">High purity pool salt</div>
             </div>
           </div>
         </div>
@@ -706,6 +777,7 @@
       <div class="alert-text">
         <strong id="alertTitle">pH Trending High</strong>
         <span id="alertBody">pH has risen 0.3 units in 2 hrs. Tap Analyse for dosing advice.</span>
+        <div class="alert-tap-hint">Tap for details →</div>
       </div>
     </div>
 
@@ -755,7 +827,7 @@
 
     <!-- Metrics -->
     <div class="metrics-grid">
-      <div class="metric-card warn">
+      <div class="metric-card warn" onclick="showHistory('ph')">
         <div class="metric-icon">🧪</div>
         <div class="metric-name">pH Level</div>
         <div class="metric-value" id="mPH">7.9</div>
@@ -765,8 +837,9 @@
           <polyline points="0,26 25,22 50,18 75,13 100,9" fill="none" stroke="var(--warn)" stroke-width="2.5" stroke-linecap="round"/>
           <polyline points="0,26 25,22 50,18 75,13 100,9 100,32 0,32" fill="rgba(224,123,0,0.08)" stroke="none"/>
         </svg></div>
+        <div class="sparkline-tap">Tap for history →</div>
       </div>
-      <div class="metric-card warn">
+      <div class="metric-card warn" onclick="showHistory('cl')">
         <div class="metric-icon">⚗️</div>
         <div class="metric-name">Free Chlorine</div>
         <div class="metric-value" id="mCL">2.1<span class="metric-unit"> ppm</span></div>
@@ -775,8 +848,9 @@
         <div class="sparkline"><svg viewBox="0 0 100 32" preserveAspectRatio="none">
           <polyline points="0,6 25,10 50,16 75,21 100,26" fill="none" stroke="var(--warn)" stroke-width="2.5" stroke-linecap="round"/>
         </svg></div>
+        <div class="sparkline-tap">Tap for history →</div>
       </div>
-      <div class="metric-card ok">
+      <div class="metric-card ok" onclick="showHistory('temp')">
         <div class="metric-icon">🌡️</div>
         <div class="metric-name">Temperature</div>
         <div class="metric-value" id="mTEMP">82<span class="metric-unit">°F</span></div>
@@ -795,41 +869,104 @@
         <div class="sparkline"><svg viewBox="0 0 100 32" preserveAspectRatio="none">
           <polyline points="0,17 25,17 50,16 75,17 100,16" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round"/>
         </svg></div>
+        <div class="sparkline-tap">Tap for history →</div>
       </div>
     </div>
 
-    <!-- Chart -->
-    <div class="chart-card">
-      <div class="chart-tabs">
-        <div class="chart-tab active">pH</div>
-        <div class="chart-tab">Chlorine</div>
-        <div class="chart-tab">Temp</div>
-        <div class="chart-tab">Salt</div>
-      </div>
-      <div class="chart-area">
-        <svg viewBox="0 0 300 100" preserveAspectRatio="none">
-          <line x1="0" y1="25" x2="300" y2="25" stroke="var(--border2)" stroke-width="1"/>
-          <line x1="0" y1="50" x2="300" y2="50" stroke="var(--border2)" stroke-width="1"/>
-          <line x1="0" y1="75" x2="300" y2="75" stroke="var(--border2)" stroke-width="1"/>
-          <rect x="0" y="35" width="300" height="30" fill="rgba(6,167,125,0.06)"/>
-          <polyline points="0,65 60,58 120,52 180,44 240,36 300,27"
-            fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <polyline points="0,65 60,58 120,52 180,44 240,36 300,27 300,100 0,100"
-            fill="rgba(0,119,182,0.07)" stroke="none"/>
-          <circle cx="300" cy="27" r="5" fill="var(--primary)"/>
-          <circle cx="300" cy="27" r="9" fill="rgba(0,119,182,0.15)"/>
-        </svg>
-      </div>
-      <div class="chart-labels">
-        <div class="chart-label">12am</div>
-        <div class="chart-label">6am</div>
-        <div class="chart-label">12pm</div>
-        <div class="chart-label">6pm</div>
-        <div class="chart-label">Now</div>
+    <div style="height:10px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ HISTORY PAGE ═══════════════ -->
+<div class="page" id="histPage">
+  <header>
+    <div class="logo">Aqua<span>Sensiq</span></div>
+    <div class="header-right">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <div class="status-text">Live</div>
       </div>
     </div>
+  </header>
 
-    <!-- Sensor Health -->
+  <div class="hero" style="padding-bottom:16px;">
+    <div class="hero-greeting">Trends</div>
+    <div class="hero-title" style="font-size:26px;">Water Quality History</div>
+  </div>
+
+  <div class="hist-metric-tabs" id="histTabs">
+    <div class="hist-metric-tab active" data-metric="ph" onclick="setHistoryMetric('ph')">pH</div>
+    <div class="hist-metric-tab" data-metric="cl" onclick="setHistoryMetric('cl')">Chlorine</div>
+    <div class="hist-metric-tab" data-metric="temp" onclick="setHistoryMetric('temp')">Temperature</div>
+    <div class="hist-metric-tab" data-metric="salt" onclick="setHistoryMetric('salt')">Salinity</div>
+  </div>
+
+  <div class="hist-chart-card">
+    <div class="hist-chart-title" id="histChartTitle">pH Level</div>
+    <div class="hist-chart-subtitle" id="histChartSubtitle">Target range: 7.2 – 7.6</div>
+    <div class="hist-chart-area">
+      <svg id="histSvg" viewBox="0 0 300 140" preserveAspectRatio="none">
+        <line x1="0" y1="28" x2="300" y2="28" stroke="var(--border2)" stroke-width="1"/>
+        <line x1="0" y1="56" x2="300" y2="56" stroke="var(--border2)" stroke-width="1"/>
+        <line x1="0" y1="84" x2="300" y2="84" stroke="var(--border2)" stroke-width="1"/>
+        <line x1="0" y1="112" x2="300" y2="112" stroke="var(--border2)" stroke-width="1"/>
+        <rect id="histTargetZone" x="0" y="40" width="300" height="40" fill="rgba(6,167,125,0.07)"/>
+        <polyline id="histLine" points="0,90 50,82 100,74 150,66 200,55 250,44 300,36"
+          fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline id="histFill" points="0,90 50,82 100,74 150,66 200,55 250,44 300,36 300,140 0,140"
+          fill="rgba(0,119,182,0.07)" stroke="none"/>
+        <circle id="histDot" cx="300" cy="36" r="5" fill="var(--primary)"/>
+      </svg>
+    </div>
+    <div class="hist-range-tabs">
+      <div class="hist-range-tab active" onclick="setHistRange(this,'24h')">24h</div>
+      <div class="hist-range-tab" onclick="setHistRange(this,'7d')">7 days</div>
+      <div class="hist-range-tab" onclick="setHistRange(this,'30d')">30 days</div>
+    </div>
+  </div>
+
+  <div class="hist-stats-row">
+    <div class="hist-stat">
+      <div class="hist-stat-val" id="histMin">—</div>
+      <div class="hist-stat-label">Min</div>
+    </div>
+    <div class="hist-stat">
+      <div class="hist-stat-val" id="histAvg">—</div>
+      <div class="hist-stat-label">Average</div>
+    </div>
+    <div class="hist-stat">
+      <div class="hist-stat-val" id="histMax">—</div>
+      <div class="hist-stat-label">Max</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAINTENANCE PAGE ═══════════════ -->
+<div class="page" id="maintPage">
+  <header>
+    <div class="logo">Aqua<span>Sensiq</span></div>
+    <div class="header-right">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <div class="status-text">Live</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero" style="padding-bottom:16px;">
+    <div class="hero-greeting">Tools</div>
+    <div class="hero-title" style="font-size:26px;">Maintenance</div>
+  </div>
+
+  <div class="cards-container">
+    <div class="section-head" style="padding-top:8px;">Automated Maintenance</div>
+    <div class="maint-grid">
+      <div class="maint-card"><div class="maint-icon">🔧</div><div class="maint-name">Auto Calibrate</div><div class="maint-next">Next: Tomorrow 3am</div><button class="maint-btn" onclick="triggerAction(this,'Calibrating…')">Run Now</button></div>
+      <div class="maint-card"><div class="maint-icon">🚿</div><div class="maint-name">Sensor Rinse</div><div class="maint-next">Every 6 hours</div><button class="maint-btn" onclick="triggerAction(this,'Rinsing…')">Run Now</button></div>
+      <div class="maint-card"><div class="maint-icon">📊</div><div class="maint-name">Export Report</div><div class="maint-next">Last: Yesterday</div><button class="maint-btn" onclick="triggerAction(this,'Generating…')">Export CSV</button></div>
+      <div class="maint-card"><div class="maint-icon">🔔</div><div class="maint-name">Test Alerts</div><div class="maint-next">Pushover + Email</div><button class="maint-btn" onclick="triggerAction(this,'Sending…')">Test</button></div>
+    </div>
+
     <div class="section-head">Sensor Health</div>
     <div class="sensor-list">
       <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">Atlas Scientific pH</div><div class="sensor-meta">Last cleaned<span>6 hrs ago</span></div></div>
@@ -837,17 +974,6 @@
       <div class="sensor-item"><div class="sensor-indicator s-clean"></div><div class="sensor-name">Conductivity (Salt)</div><div class="sensor-meta">Auto-cleaning<span style="color:var(--primary)">In progress…</span></div></div>
       <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">DS18B20 Temperature</div><div class="sensor-meta">Calibrated<span>4 days ago</span></div></div>
     </div>
-
-    <!-- Maintenance -->
-    <div class="section-head">Automated Maintenance</div>
-    <div class="maint-grid">
-      <div class="maint-card"><div class="maint-icon">🔧</div><div class="maint-name">Auto Calibrate</div><div class="maint-next">Next: Tomorrow 3am</div><button class="maint-btn" onclick="triggerAction(this,'Calibrating…')">Run Now</button></div>
-      <div class="maint-card"><div class="maint-icon">🚿</div><div class="maint-name">Sensor Rinse</div><div class="maint-next">Every 6 hours</div><button class="maint-btn" onclick="triggerAction(this,'Rinsing…')">Run Now</button></div>
-      <div class="maint-card"><div class="maint-icon">📊</div><div class="maint-name">Export Report</div><div class="maint-next">Last: Yesterday</div><button class="maint-btn" onclick="triggerAction(this,'Generating…')">Export CSV</button></div>
-      <div class="maint-card"><div class="maint-icon">🔔</div><div class="maint-name">Test Alerts</div><div class="maint-next">Pushover</div><button class="maint-btn" onclick="triggerAction(this,'Sending…')">Test</button></div>
-    </div>
-
-    <div style="height:10px;"></div>
   </div>
 </div>
 
@@ -866,51 +992,81 @@
   <div class="settings-section">
     <div class="section-head" style="padding:0 0 10px;">Pool Configuration</div>
     <div class="settings-card">
-      <div class="settings-row"><div class="settings-row-label">Pool Volume</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-volume">—</div><div class="settings-row-arrow">›</div></div></div>
-      <div class="settings-row"><div class="settings-row-label">SWCG / Cell Size</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-swcg">—</div><div class="settings-row-arrow">›</div></div></div>
-      <div class="settings-row"><div class="settings-row-label">Pool Finish</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-finish">—</div><div class="settings-row-arrow">›</div></div></div>
-      <div class="settings-row"><div class="settings-row-label">Bather Load</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-bather">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('volume')"><div class="settings-row-label">Pool Volume</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-volume">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('swcg')"><div class="settings-row-label">SWCG Brand</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-swcg">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('finish')"><div class="settings-row-label">Pool Finish</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-finish">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('bather')"><div class="settings-row-label">Bather Load</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-bather">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('units')"><div class="settings-row-label">Measurement Units</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-units">—</div><div class="settings-row-arrow">›</div></div></div>
     </div>
   </div>
 
   <div class="settings-section">
     <div class="section-head" style="padding:0 0 10px;">Chemicals On Hand</div>
     <div class="settings-card">
-      <div class="settings-row"><div class="settings-row-label">pH Reducer</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-phdown">—</div><div class="settings-row-arrow">›</div></div></div>
-      <div class="settings-row"><div class="settings-row-label">pH Increaser</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-phup">—</div><div class="settings-row-arrow">›</div></div></div>
-      <div class="settings-row"><div class="settings-row-label">Shock / Chlorine</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-chlorine">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('phdown')"><div class="settings-row-label">pH Reducer</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-phdown">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('phup')"><div class="settings-row-label">pH Increaser</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-phup">—</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row" onclick="editSetting('chlorine')"><div class="settings-row-label">Shock / Chlorine</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-chlorine">—</div><div class="settings-row-arrow">›</div></div></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="section-head" style="padding:0 0 10px;">Notifications</div>
+    <div class="settings-card">
+      <div class="toggle-row">
+        <div><div class="toggle-label">Push Notifications</div><div class="toggle-sub">Alerts via Pushover app</div></div>
+        <label class="toggle"><input type="checkbox" id="notifPush" checked onchange="saveNotifPrefs()"><div class="toggle-slider"></div></label>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">Email Notifications</div><div class="toggle-sub">Alerts via email</div></div>
+        <label class="toggle"><input type="checkbox" id="notifEmail" onchange="saveNotifPrefs()"><div class="toggle-slider"></div></label>
+      </div>
+      <div class="settings-row" onclick="editSetting('notifFreq')">
+        <div class="settings-row-label">Alert Frequency</div>
+        <div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-notifFreq">Immediate</div><div class="settings-row-arrow">›</div></div>
+      </div>
     </div>
   </div>
 
   <div class="settings-section">
     <div class="section-head" style="padding:0 0 10px;">Connection</div>
     <div class="settings-card">
-      <div class="settings-row"><div class="settings-row-label">Device Code</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-piaddr">—</div><div class="settings-row-arrow">›</div></div></div>
-      <div class="settings-row"><div class="settings-row-label">Connection Mode</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value">Tailscale</div><div class="settings-row-arrow">›</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Device Code</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value" id="sv-piaddr">—</div></div></div>
+      <div class="settings-row"><div class="settings-row-label">Connection Mode</div><div style="display:flex;align-items:center;gap:6px;"><div class="settings-row-value">Tailscale</div></div></div>
     </div>
   </div>
 
   <div class="settings-section">
-    <button class="btn-primary" onclick="resetSetup()" style="margin-bottom:10px;">🔄 Re-run Setup Wizard</button>
-    <button class="settings-danger-btn" onclick="resetConnection()">↩ Change Pi Connection</button>
+    <button class="settings-danger-btn" onclick="resetConnection()" style="margin-top:0;">↩ Change Pi Connection</button>
   </div>
 </div>
 
 <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
 <nav class="bottom-nav" id="mainNav" style="display:none;">
-  <div class="nav-item active" onclick="showPage('dashPage');setNav(this)">
+  <div class="nav-item active" data-page="dashPage" onclick="showPage('dashPage');setNav(this)">
     <div class="nav-icon">🏠</div><div class="nav-label">Dashboard</div>
   </div>
-  <div class="nav-item" onclick="showPage('dashPage');setNav(this)">
+  <div class="nav-item" data-page="histPage" onclick="showPage('histPage');setNav(this)">
     <div class="nav-icon">📈</div><div class="nav-label">History</div>
   </div>
-  <div class="nav-item" onclick="showPage('dashPage');setNav(this)">
+  <div class="nav-item" data-page="maintPage" onclick="showPage('maintPage');setNav(this)">
     <div class="nav-icon">🔧</div><div class="nav-label">Maintenance</div>
   </div>
-  <div class="nav-item" onclick="showPage('settingsPage');setNav(this)">
+  <div class="nav-item" data-page="settingsPage" onclick="showPage('settingsPage');setNav(this)">
     <div class="nav-icon">⚙️</div><div class="nav-label">Settings</div>
   </div>
 </nav>
+
+<!-- ═══════════════ SETTINGS EDIT MODAL ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="sheetTitle">Edit</div>
+  <div class="sheet-body" id="sheetBody"></div>
+  <div class="sheet-footer">
+    <button class="sheet-btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="sheet-btn-primary" id="sheetSaveBtn" onclick="saveSheetEdit()">Save</button>
+  </div>
+</div>
 
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
@@ -1067,10 +1223,12 @@ function buildSummary() {
 function completeSetup() {
   const vol = parseFloat(document.getElementById('poolVolume').value);
   const unit = document.getElementById('volumeUnit').value;
+  const selectedUnits = document.querySelector('#unitsSelector .check-item.selected')?.dataset.units || 'metric';
   poolProfile = {
     volumeGal:     unit === 'liters' ? Math.round(vol * 0.264172) : Math.round(vol),
     volumeDisplay: vol,
     volumeUnit:    unit,
+    units:         selectedUnits,
     swcgBrand:     document.getElementById('swcgBrand').value,
     swcgSize:      document.getElementById('swcgSize').value,
     poolFinish:    document.getElementById('poolFinish').value,
@@ -1080,6 +1238,7 @@ function completeSetup() {
     chlorineType:  document.querySelector('#chlorineType .check-item.selected')?.dataset.val || 'liquidcl',
     saltType:      document.querySelector('#saltType .check-item.selected')?.dataset.val || 'poolsalt',
     ownerName:     document.getElementById('ownerName').value.trim(),
+    notifFreq:     'immediate',
   };
   save(KEY_PROFILE, poolProfile);
   document.getElementById('wizardPage').classList.remove('active');
@@ -1134,7 +1293,12 @@ function updateUI() {
   document.getElementById('sv-phdown').textContent  = phDownNames[p.phDown] || p.phDown;
   document.getElementById('sv-phup').textContent    = phUpNames[p.phUp] || p.phUp;
   document.getElementById('sv-chlorine').textContent= clNames[p.chlorineType] || p.chlorineType;
+  document.getElementById('sv-units').textContent   = (p.units === 'imperial') ? 'Imperial' : 'Metric';
+  document.getElementById('sv-notifFreq').textContent = {immediate:'Immediate',hourly:'Hourly',daily:'Daily',off:'Off'}[p.notifFreq||'immediate'] || 'Immediate';
   if (piConnection) document.getElementById('sv-piaddr').textContent = piConnection.deviceCode || piConnection.address;
+  loadNotifPrefs();
+  // Init history page
+  setHistoryMetric('ph');
 
   // Start polling
   fetchCurrent();
@@ -1208,6 +1372,9 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  // Sync nav highlight
+  const navItem = document.querySelector('.nav-item[data-page="' + id + '"]');
+  if (navItem) setNav(navItem);
 }
 function setNav(el) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1227,6 +1394,272 @@ function resetConnection() {
   localStorage.removeItem(KEY_CONNECTION);
   localStorage.removeItem(KEY_PROFILE);
   location.reload();
+}
+
+
+// ── Units preference ──────────────────────────────────────────────────
+function selectUnits(el) {
+  document.querySelectorAll('#unitsSelector .check-item').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const units = el.dataset.units;
+  const isMetric = units === 'metric';
+  document.getElementById('volumeUnit').value = isMetric ? 'liters' : 'gallons';
+  document.getElementById('volumeUnitDisplay').textContent = isMetric ? 'Litres (L)' : 'US Gallons (gal)';
+  document.getElementById('dimLabel').textContent = isMetric ? 'Dimensions (metres)' : 'Dimensions (feet)';
+  document.getElementById('poolVolume').placeholder = isMetric ? 'e.g. 50000' : 'e.g. 13000';
+}
+
+// ── showHistory: navigate to history tab for specific metric ─────────
+function showHistory(metric) {
+  showPage('histPage');
+  const nav = document.querySelector('.nav-item[data-page="histPage"]');
+  if (nav) setNav(nav);
+  setHistoryMetric(metric);
+}
+
+// ── History page ──────────────────────────────────────────────────────
+const HIST_CONFIG = {
+  ph:   { title:'pH Level', subtitle:'Target range: 7.2 – 7.6', color:'var(--primary)', min:6.8, max:8.2, targetY1:40, targetH:40 },
+  cl:   { title:'Free Chlorine', subtitle:'Target range: 3 – 5 ppm', color:'var(--aqua)', min:0, max:8, targetY1:45, targetH:35 },
+  temp: { title:'Temperature', subtitle:'Ideal range: 26 – 30°C', color:'var(--warn)', min:18, max:36, targetY1:40, targetH:40 },
+  salt: { title:'Salinity', subtitle:'Target range: 2700 – 3400 ppm', color:'var(--success)', min:2000, max:4000, targetY1:38, targetH:44 },
+};
+
+let currentHistMetric = 'ph';
+
+function setHistoryMetric(metric) {
+  currentHistMetric = metric;
+  document.querySelectorAll('.hist-metric-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.metric === metric);
+  });
+  const cfg = HIST_CONFIG[metric];
+  document.getElementById('histChartTitle').textContent = cfg.title;
+  document.getElementById('histChartSubtitle').textContent = cfg.subtitle;
+  document.getElementById('histTargetZone').setAttribute('y', cfg.targetY1);
+  document.getElementById('histTargetZone').setAttribute('height', cfg.targetH);
+  document.getElementById('histLine').setAttribute('stroke', cfg.color);
+  // Update stats with placeholder values
+  const stats = { ph:{min:'7.1',avg:'7.4',max:'7.8'}, cl:{min:'1.8',avg:'2.9',max:'4.2'}, temp:{min:'24',avg:'27',max:'29'}, salt:{min:'3050',avg:'3180',max:'3290'} };
+  const s = stats[metric];
+  document.getElementById('histMin').textContent = s.min;
+  document.getElementById('histAvg').textContent = s.avg;
+  document.getElementById('histMax').textContent = s.max;
+}
+
+function setHistRange(el, range) {
+  document.querySelectorAll('.hist-range-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Settings inline editing ────────────────────────────────────────────
+let currentEditKey = null;
+
+const EDIT_CONFIGS = {
+  volume: {
+    title: 'Pool Volume',
+    render: (p) => `
+      <div class="field-group">
+        <label class="field-label">Volume</label>
+        <input type="number" class="field-input" id="edit-volume" value="${p.volumeDisplay || p.volumeGal}" inputmode="numeric">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Units</label>
+        <select class="field-input" id="edit-units">
+          <option value="liters" ${(p.volumeUnit==='liters')?'selected':''}>Litres</option>
+          <option value="gallons" ${(p.volumeUnit==='gallons')?'selected':''}>US Gallons</option>
+        </select>
+      </div>`,
+    save: (p) => {
+      p.volumeDisplay = parseFloat(document.getElementById('edit-volume').value);
+      p.volumeUnit = document.getElementById('edit-units').value;
+      p.volumeGal = p.volumeUnit === 'liters' ? Math.round(p.volumeDisplay * 0.264172) : Math.round(p.volumeDisplay);
+    }
+  },
+  units: {
+    title: 'Measurement Units',
+    render: (p) => `
+      <div class="check-grid">
+        <div class="check-item ${p.units!=='imperial'?'selected':''}" data-val="metric" onclick="sheetToggle(this,'units-edit')">
+          <div class="check-item-name">Metric</div><div class="check-item-note">Litres, metres, °C</div>
+        </div>
+        <div class="check-item ${p.units==='imperial'?'selected':''}" data-val="imperial" onclick="sheetToggle(this,'units-edit')">
+          <div class="check-item-name">Imperial</div><div class="check-item-note">Gallons, feet, °F</div>
+        </div>
+      </div>
+      <input type="hidden" id="units-edit" value="${p.units||'metric'}">`,
+    save: (p) => { p.units = document.getElementById('units-edit').value; }
+  },
+  swcg: {
+    title: 'SWCG Brand',
+    render: (p) => `
+      <div class="field-group">
+        <label class="field-label">Brand</label>
+        <select class="field-input" id="edit-swcg">
+          <optgroup label="Australian Brands">
+            <option value="Astral" ${p.swcgBrand==='Astral'?'selected':''}>Astral Pool</option>
+            <option value="Zodiac" ${p.swcgBrand==='Zodiac'?'selected':''}>Zodiac</option>
+            <option value="Waterco" ${p.swcgBrand==='Waterco'?'selected':''}>Waterco</option>
+            <option value="Chloromatic" ${p.swcgBrand==='Chloromatic'?'selected':''}>Chloromatic</option>
+            <option value="Davey" ${p.swcgBrand==='Davey'?'selected':''}>Davey</option>
+            <option value="Maytronics" ${p.swcgBrand==='Maytronics'?'selected':''}>Maytronics</option>
+          </optgroup>
+          <optgroup label="International">
+            <option value="Pentair" ${p.swcgBrand==='Pentair'?'selected':''}>Pentair IntelliChlor</option>
+            <option value="Hayward" ${p.swcgBrand==='Hayward'?'selected':''}>Hayward AquaRite</option>
+            <option value="Jandy" ${p.swcgBrand==='Jandy'?'selected':''}>Jandy TruClear</option>
+          </optgroup>
+          <option value="Other" ${p.swcgBrand==='Other'?'selected':''}>Other</option>
+        </select>
+      </div>`,
+    save: (p) => { p.swcgBrand = document.getElementById('edit-swcg').value; }
+  },
+  finish: {
+    title: 'Pool Finish',
+    render: (p) => `
+      <div class="field-group">
+        <select class="field-input" id="edit-finish">
+          <option value="plaster" ${p.poolFinish==='plaster'?'selected':''}>Plaster / Marcite</option>
+          <option value="pebble" ${p.poolFinish==='pebble'?'selected':''}>Pebble Tec / Aggregate</option>
+          <option value="vinyl" ${p.poolFinish==='vinyl'?'selected':''}>Vinyl Liner</option>
+          <option value="fiberglass" ${p.poolFinish==='fiberglass'?'selected':''}>Fiberglass</option>
+          <option value="tile" ${p.poolFinish==='tile'?'selected':''}>Tile</option>
+        </select>
+      </div>`,
+    save: (p) => { p.poolFinish = document.getElementById('edit-finish').value; }
+  },
+  bather: {
+    title: 'Bather Load',
+    render: (p) => `
+      <div class="field-group">
+        <select class="field-input" id="edit-bather">
+          <option value="low" ${p.batherLoad==='low'?'selected':''}>Low — 1–2 people occasionally</option>
+          <option value="medium" ${p.batherLoad==='medium'?'selected':''}>Medium — Family use most days</option>
+          <option value="high" ${p.batherLoad==='high'?'selected':''}>High — Frequent parties / heavy use</option>
+        </select>
+      </div>`,
+    save: (p) => { p.batherLoad = document.getElementById('edit-bather').value; }
+  },
+  phdown: {
+    title: 'pH Reducer',
+    render: (p) => `
+      <div class="check-grid">
+        <div class="check-item ${p.phDown==='muriatic'?'selected':''}" data-val="muriatic" onclick="sheetToggle(this,'phdown-edit')">
+          <div class="check-item-name">Hydrochloric Acid</div><div class="check-item-note">HCl liquid (Pool acid)</div>
+        </div>
+        <div class="check-item ${p.phDown==='dryacid'?'selected':''}" data-val="dryacid" onclick="sheetToggle(this,'phdown-edit')">
+          <div class="check-item-name">Dry Acid</div><div class="check-item-note">Lo-Chlor / BioGuard pH Minus</div>
+        </div>
+      </div>
+      <input type="hidden" id="phdown-edit" value="${p.phDown||'muriatic'}">`,
+    save: (p) => { p.phDown = document.getElementById('phdown-edit').value; }
+  },
+  phup: {
+    title: 'pH Increaser',
+    render: (p) => `
+      <div class="check-grid">
+        <div class="check-item ${p.phUp==='sodaash'?'selected':''}" data-val="sodaash" onclick="sheetToggle(this,'phup-edit')">
+          <div class="check-item-name">Soda Ash</div><div class="check-item-note">Lo-Chlor / BioGuard pH Up</div>
+        </div>
+        <div class="check-item ${p.phUp==='bicarb'?'selected':''}" data-val="bicarb" onclick="sheetToggle(this,'phup-edit')">
+          <div class="check-item-name">Buffer / Bicarb</div><div class="check-item-note">Alkalinity increaser</div>
+        </div>
+      </div>
+      <input type="hidden" id="phup-edit" value="${p.phUp||'sodaash'}">`,
+    save: (p) => { p.phUp = document.getElementById('phup-edit').value; }
+  },
+  chlorine: {
+    title: 'Shock / Chlorine',
+    render: (p) => `
+      <div class="check-grid">
+        <div class="check-item ${p.chlorineType==='liquidcl'?'selected':''}" data-val="liquidcl" onclick="sheetToggle(this,'cl-edit')">
+          <div class="check-item-name">Liquid Chlorine</div><div class="check-item-note">12.5% sodium hypochlorite</div>
+        </div>
+        <div class="check-item ${p.chlorineType==='granularcl'?'selected':''}" data-val="granularcl" onclick="sheetToggle(this,'cl-edit')">
+          <div class="check-item-name">Granular Chlorine</div><div class="check-item-note">Lo-Chlor / HTH / Zodiac</div>
+        </div>
+        <div class="check-item ${p.chlorineType==='calchhypo'?'selected':''}" data-val="calchhypo" onclick="sheetToggle(this,'cl-edit')">
+          <div class="check-item-name">Cal-Hypo</div><div class="check-item-note">Granular, 65–73%</div>
+        </div>
+        <div class="check-item ${p.chlorineType==='dichlor'?'selected':''}" data-val="dichlor" onclick="sheetToggle(this,'cl-edit')">
+          <div class="check-item-name">Stabilised Granules</div><div class="check-item-note">Dichlor, 56–62%</div>
+        </div>
+      </div>
+      <input type="hidden" id="cl-edit" value="${p.chlorineType||'liquidcl'}">`,
+    save: (p) => { p.chlorineType = document.getElementById('cl-edit').value; }
+  },
+  notifFreq: {
+    title: 'Alert Frequency',
+    render: (p) => `
+      <div class="check-grid">
+        <div class="check-item ${(p.notifFreq||'immediate')==='immediate'?'selected':''}" data-val="immediate" onclick="sheetToggle(this,'freq-edit')">
+          <div class="check-item-name">Immediate</div><div class="check-item-note">Alert as it happens</div>
+        </div>
+        <div class="check-item ${p.notifFreq==='hourly'?'selected':''}" data-val="hourly" onclick="sheetToggle(this,'freq-edit')">
+          <div class="check-item-name">Hourly Digest</div><div class="check-item-note">Batched each hour</div>
+        </div>
+        <div class="check-item ${p.notifFreq==='daily'?'selected':''}" data-val="daily" onclick="sheetToggle(this,'freq-edit')">
+          <div class="check-item-name">Daily Summary</div><div class="check-item-note">Once per day</div>
+        </div>
+        <div class="check-item ${p.notifFreq==='off'?'selected':''}" data-val="off" onclick="sheetToggle(this,'freq-edit')">
+          <div class="check-item-name">Off</div><div class="check-item-note">No notifications</div>
+        </div>
+      </div>
+      <input type="hidden" id="freq-edit" value="${p.notifFreq||'immediate'}">`,
+    save: (p) => { p.notifFreq = document.getElementById('freq-edit').value; }
+  },
+};
+
+function sheetToggle(el, hiddenId) {
+  el.closest('.check-grid, .sheet-body').querySelectorAll('.check-item').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById(hiddenId).value = el.dataset.val;
+}
+
+function editSetting(key) {
+  if (!poolProfile) return;
+  currentEditKey = key;
+  const cfg = EDIT_CONFIGS[key];
+  if (!cfg) return;
+  document.getElementById('sheetTitle').textContent = cfg.title;
+  document.getElementById('sheetBody').innerHTML = cfg.render(poolProfile);
+  document.getElementById('modalOverlay').classList.add('active');
+  setTimeout(() => document.getElementById('bottomSheet').classList.add('active'), 10);
+}
+
+function closeModal() {
+  document.getElementById('bottomSheet').classList.remove('active');
+  setTimeout(() => document.getElementById('modalOverlay').classList.remove('active'), 350);
+}
+
+function saveSheetEdit() {
+  if (!poolProfile || !currentEditKey) return;
+  const cfg = EDIT_CONFIGS[currentEditKey];
+  if (!cfg) return;
+  cfg.save(poolProfile);
+  save(KEY_PROFILE, poolProfile);
+  updateUI();
+  closeModal();
+}
+
+// ── Notification preferences ──────────────────────────────────────────
+const KEY_NOTIF = 'aquasensiq_notif';
+
+function saveNotifPrefs() {
+  const prefs = {
+    push:  document.getElementById('notifPush').checked,
+    email: document.getElementById('notifEmail').checked,
+  };
+  localStorage.setItem(KEY_NOTIF, JSON.stringify(prefs));
+}
+
+function loadNotifPrefs() {
+  try {
+    const prefs = JSON.parse(localStorage.getItem(KEY_NOTIF));
+    if (prefs) {
+      document.getElementById('notifPush').checked  = prefs.push !== false;
+      document.getElementById('notifEmail').checked = prefs.email === true;
+    }
+  } catch(e) {}
 }
 
 // ── Init ──────────────────────────────────────────────────────────────

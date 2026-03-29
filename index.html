@@ -500,6 +500,95 @@
   .toggle input:checked + .toggle-slider { background:var(--primary); }
   .toggle input:checked + .toggle-slider:before { transform:translateX(22px); }
 
+  /* ── MAINTENANCE PAGE ── */
+  .maint-due-banner {
+    background:var(--warn-l); border:2px solid #FFD9A0; border-radius:var(--radius-sm);
+    padding:14px 16px; margin-bottom:14px; display:flex; align-items:flex-start; gap:12px;
+  }
+  .maint-due-banner.ok { background:var(--success-l); border-color:#B2EDD8; }
+  .maint-due-icon { font-size:24px; flex-shrink:0; }
+  .maint-due-text { font-size:14px; font-weight:700; color:var(--text); }
+  .maint-due-sub { font-size:13px; color:var(--muted); margin-top:2px; font-weight:500; }
+
+  .sensor-status-card {
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    overflow:hidden; margin-bottom:16px;
+  }
+  .sensor-status-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px; border-bottom:1px solid var(--border2);
+  }
+  .sensor-status-row:last-child { border-bottom:none; }
+  .sensor-status-left { display:flex; align-items:center; gap:12px; }
+  .sensor-status-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .sensor-status-name { font-size:15px; font-weight:700; color:var(--text); }
+  .sensor-status-sub { font-size:12px; color:var(--muted); margin-top:2px; font-weight:600; }
+  .sensor-status-right { text-align:right; }
+  .sensor-status-age { font-size:13px; font-weight:700; color:var(--muted); }
+  .sensor-status-due { font-size:12px; margin-top:2px; font-weight:700; }
+  .due-ok   { color:var(--success); }
+  .due-soon { color:var(--warn); }
+  .due-now  { color:var(--danger); }
+
+  .wizard-overlay {
+    position:fixed; inset:0; background:rgba(13,33,55,0.55);
+    z-index:600; display:none; backdrop-filter:blur(4px);
+    align-items:flex-end; justify-content:center;
+  }
+  .wizard-overlay.active { display:flex; animation:fadeIn 0.2s ease; }
+  .wizard-sheet {
+    background:var(--card); border-radius:24px 24px 0 0;
+    width:100%; max-width:480px; max-height:90vh; overflow-y:auto;
+    padding:0 0 40px; transform:translateY(100%);
+    transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
+  }
+  .wizard-overlay.active .wizard-sheet { transform:translateY(0); }
+  .wizard-sheet-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
+  .wizard-sheet-header { padding:16px 24px 14px; border-bottom:1px solid var(--border2); display:flex; align-items:center; justify-content:space-between; }
+  .wizard-sheet-title { font-size:18px; font-weight:800; color:var(--text); }
+  .wizard-sheet-close { background:var(--bg); border:none; width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+  .wizard-progress-bar { height:4px; background:var(--border2); margin:0; }
+  .wizard-progress-fill { height:100%; background:var(--primary); border-radius:0; transition:width 0.4s ease; }
+  .wizard-step-wrap { padding:20px 24px; }
+  .wizard-step-label { font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--primary); margin-bottom:4px; }
+  .wizard-step-title { font-size:22px; font-weight:800; color:var(--text); margin-bottom:10px; }
+  .wizard-step-desc { font-size:15px; color:var(--muted); line-height:1.65; margin-bottom:20px; }
+  .wizard-instruction {
+    background:var(--bg); border:1.5px solid var(--border);
+    border-radius:14px; padding:14px 16px; margin-bottom:12px;
+    display:flex; align-items:flex-start; gap:12px;
+  }
+  .wizard-instruction.highlight { background:var(--warn-l); border-color:#FFD9A0; }
+  .wizard-instruction.success { background:var(--success-l); border-color:#B2EDD8; }
+  .wizard-instruction-icon { font-size:22px; flex-shrink:0; margin-top:1px; }
+  .wizard-instruction-text { font-size:14px; color:var(--text2); line-height:1.55; font-weight:600; }
+  .wizard-instruction-text strong { color:var(--text); }
+  .wizard-timer-box {
+    background:var(--primary); border-radius:16px; padding:20px;
+    text-align:center; margin-bottom:16px; color:#fff;
+  }
+  .wizard-timer-label { font-size:13px; font-weight:700; opacity:0.8; margin-bottom:6px; }
+  .wizard-timer-val { font-size:52px; font-weight:900; font-family:'Plus Jakarta Sans',sans-serif; line-height:1; }
+  .wizard-timer-sub { font-size:13px; opacity:0.75; margin-top:6px; }
+  .wizard-timer-btn { background:rgba(255,255,255,0.2); border:1.5px solid rgba(255,255,255,0.4); color:#fff; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; padding:9px 20px; border-radius:10px; cursor:pointer; margin-top:12px; }
+  .wizard-nav { display:flex; gap:10px; padding:0 24px; margin-top:4px; }
+  .wizard-nav-primary { flex:2; background:var(--primary); color:#fff; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; padding:15px; border-radius:14px; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(0,119,182,0.25); }
+  .wizard-nav-secondary { flex:1; background:var(--bg); color:var(--muted); font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; padding:15px; border-radius:14px; border:2px solid var(--border); cursor:pointer; }
+  .wizard-complete { text-align:center; padding:10px 0 4px; }
+  .wizard-complete-icon { font-size:56px; margin-bottom:12px; }
+  .wizard-complete-title { font-size:22px; font-weight:800; color:var(--success); margin-bottom:8px; }
+  .wizard-complete-desc { font-size:14px; color:var(--muted); line-height:1.6; }
+
+  .export-row { display:flex; gap:10px; margin-bottom:14px; }
+  .export-btn {
+    flex:1; background:var(--card); border:2px solid var(--border); border-radius:var(--radius-sm);
+    padding:14px; text-align:center; cursor:pointer; transition:all 0.18s;
+  }
+  .export-btn:active { background:var(--bg); }
+  .export-btn-icon { font-size:24px; margin-bottom:6px; }
+  .export-btn-label { font-size:13px; font-weight:800; color:var(--text); }
+  .export-btn-sub { font-size:11px; color:var(--muted); margin-top:2px; font-weight:600; }
+
   /* ── BOTTOM NAV ── */
   .bottom-nav {
     position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto;
@@ -1031,21 +1120,121 @@
   </div>
 
   <div class="cards-container">
-    <div class="section-head" style="padding-top:8px;">Automated Maintenance</div>
-    <div class="maint-grid">
-      <div class="maint-card"><div class="maint-icon">🔧</div><div class="maint-name">Auto Calibrate</div><div class="maint-next">Next: Tomorrow 3am</div><button class="maint-btn" onclick="triggerAction(this,'Calibrating…')">Run Now</button></div>
-      <div class="maint-card"><div class="maint-icon">🚿</div><div class="maint-name">Sensor Rinse</div><div class="maint-next">Every 6 hours</div><button class="maint-btn" onclick="triggerAction(this,'Rinsing…')">Run Now</button></div>
-      <div class="maint-card"><div class="maint-icon">📊</div><div class="maint-name">Export Report</div><div class="maint-next">Last: Yesterday</div><button class="maint-btn" onclick="triggerAction(this,'Generating…')">Export CSV</button></div>
-      <div class="maint-card"><div class="maint-icon">🔔</div><div class="maint-name">Test Alerts</div><div class="maint-next">Pushover + Email</div><button class="maint-btn" onclick="triggerAction(this,'Sending…')">Test</button></div>
+
+    <!-- Maintenance due banner -->
+    <div id="maintDueBanner" class="maint-due-banner">
+      <div class="maint-due-icon">🧹</div>
+      <div>
+        <div class="maint-due-text" id="maintDueText">Sensor clean due soon</div>
+        <div class="maint-due-sub" id="maintDueSub">pH and ORP probes should be cleaned monthly for accurate readings.</div>
+      </div>
     </div>
 
-    <div class="section-head">Sensor Health</div>
-    <div class="sensor-list">
-      <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">Atlas Scientific pH</div><div class="sensor-meta">Last cleaned<span>6 hrs ago</span></div></div>
-      <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">Atlas Scientific ORP / Cl</div><div class="sensor-meta">Last cleaned<span>6 hrs ago</span></div></div>
-      <div class="sensor-item"><div class="sensor-indicator s-clean"></div><div class="sensor-name">Conductivity (Salt)</div><div class="sensor-meta">Auto-cleaning<span style="color:var(--primary)">In progress…</span></div></div>
-      <div class="sensor-item"><div class="sensor-indicator s-ok"></div><div class="sensor-name">DS18B20 Temperature</div><div class="sensor-meta">Calibrated<span>4 days ago</span></div></div>
+    <!-- Sensor status -->
+    <div class="section-head" style="padding-top:4px;">Sensor Status</div>
+    <div class="sensor-status-card" id="sensorStatusCard">
+      <div class="sensor-status-row">
+        <div class="sensor-status-left">
+          <div class="sensor-status-dot" id="dot-ph" style="background:var(--success);box-shadow:0 0 6px rgba(6,167,125,0.4);"></div>
+          <div>
+            <div class="sensor-status-name">pH Probe</div>
+            <div class="sensor-status-sub">Atlas Scientific EZO-pH</div>
+          </div>
+        </div>
+        <div class="sensor-status-right">
+          <div class="sensor-status-age" id="age-ph">—</div>
+          <div class="sensor-status-due due-ok" id="due-ph">—</div>
+        </div>
+      </div>
+      <div class="sensor-status-row">
+        <div class="sensor-status-left">
+          <div class="sensor-status-dot" id="dot-orp" style="background:var(--success);box-shadow:0 0 6px rgba(6,167,125,0.4);"></div>
+          <div>
+            <div class="sensor-status-name">ORP / Chlorine Probe</div>
+            <div class="sensor-status-sub">Atlas Scientific EZO-ORP</div>
+          </div>
+        </div>
+        <div class="sensor-status-right">
+          <div class="sensor-status-age" id="age-orp">—</div>
+          <div class="sensor-status-due due-ok" id="due-orp">—</div>
+        </div>
+      </div>
+      <div class="sensor-status-row">
+        <div class="sensor-status-left">
+          <div class="sensor-status-dot" id="dot-ec" style="background:var(--primary);box-shadow:0 0 6px rgba(0,119,182,0.4);animation:pulse 1.5s infinite;"></div>
+          <div>
+            <div class="sensor-status-name">Conductivity / Salt</div>
+            <div class="sensor-status-sub">Auto-polarity cleaning enabled</div>
+          </div>
+        </div>
+        <div class="sensor-status-right">
+          <div class="sensor-status-age" style="color:var(--primary);">Auto</div>
+          <div class="sensor-status-due due-ok">Self-cleaning</div>
+        </div>
+      </div>
+      <div class="sensor-status-row">
+        <div class="sensor-status-left">
+          <div class="sensor-status-dot" style="background:var(--success);box-shadow:0 0 6px rgba(6,167,125,0.4);"></div>
+          <div>
+            <div class="sensor-status-name">Temperature</div>
+            <div class="sensor-status-sub">DS18B20 stainless probe</div>
+          </div>
+        </div>
+        <div class="sensor-status-right">
+          <div class="sensor-status-age">No cleaning needed</div>
+          <div class="sensor-status-due due-ok">✓ Good</div>
+        </div>
+      </div>
     </div>
+
+    <!-- Clean & Calibrate -->
+    <div class="section-head">Sensor Care</div>
+    <div style="background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+        <div style="font-size:36px;">🧪</div>
+        <div>
+          <div style="font-size:17px;font-weight:800;color:var(--text);">Clean &amp; Calibrate</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:2px;line-height:1.5;">Step-by-step guided cleaning and calibration for pH and ORP probes. Takes about 20 minutes.</div>
+        </div>
+      </div>
+      <button class="btn-primary" style="margin-top:0;" onclick="startCleanWizard()">Start Guided Clean →</button>
+    </div>
+
+    <!-- Data & Alerts -->
+    <div class="section-head">Data &amp; Alerts</div>
+    <div class="export-row">
+      <div class="export-btn" onclick="triggerExport('csv')">
+        <div class="export-btn-icon">📊</div>
+        <div class="export-btn-label">Export CSV</div>
+        <div class="export-btn-sub">Last 30 days</div>
+      </div>
+      <div class="export-btn" onclick="triggerExport('report')">
+        <div class="export-btn-icon">📋</div>
+        <div class="export-btn-label">Water Report</div>
+        <div class="export-btn-sub">Full summary</div>
+      </div>
+      <div class="export-btn" onclick="triggerTestAlert()">
+        <div class="export-btn-icon">🔔</div>
+        <div class="export-btn-label">Test Alert</div>
+        <div class="export-btn-sub">Push + Email</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ CLEAN & CALIBRATE WIZARD ═══════════════ -->
+<div class="wizard-overlay" id="cleanWizardOverlay">
+  <div class="wizard-sheet" id="cleanWizardSheet">
+    <div class="wizard-sheet-handle"></div>
+    <div class="wizard-sheet-header">
+      <div class="wizard-sheet-title" id="wizardSheetTitle">Clean &amp; Calibrate</div>
+      <button class="wizard-sheet-close" onclick="closeCleanWizard()">✕</button>
+    </div>
+    <div class="wizard-progress-bar">
+      <div class="wizard-progress-fill" id="wizardProgressFill" style="width:0%"></div>
+    </div>
+    <div id="wizardStepContent"></div>
   </div>
 </div>
 
@@ -1371,6 +1560,8 @@ function updateUI() {
   loadNotifPrefs();
   // Init history page
   initHistory();
+  // Init maintenance page
+  initMaintPage();
 
   // Start polling
   fetchCurrent();
@@ -2015,6 +2206,383 @@ function loadNotifPrefs() {
       document.getElementById('notifEmail').checked = prefs.email === true;
     }
   } catch(e) {}
+}
+
+
+// ═══════════════ MAINTENANCE & CLEAN WIZARD ══════════════════════════════
+
+const KEY_MAINT = 'aquasensiq_maintenance';
+
+function loadMaintData() {
+  try { return JSON.parse(localStorage.getItem(KEY_MAINT)) || {}; }
+  catch { return {}; }
+}
+function saveMaintData(d) { localStorage.setItem(KEY_MAINT, JSON.stringify(d)); }
+
+function daysSince(ts) {
+  if (!ts) return 999;
+  return Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24));
+}
+
+function initMaintPage() {
+  const d = loadMaintData();
+  const CLEAN_INTERVAL = 30; // days
+  const WARN_DAYS      = 7;  // warn this many days before due
+
+  ['ph','orp'].forEach(sensor => {
+    const lastClean = d['lastClean_' + sensor];
+    const days      = daysSince(lastClean);
+    const daysLeft  = CLEAN_INTERVAL - days;
+    const ageEl     = document.getElementById('age-' + sensor);
+    const dueEl     = document.getElementById('due-' + sensor);
+    const dotEl     = document.getElementById('dot-' + sensor);
+
+    if (ageEl) ageEl.textContent = lastClean ? 'Cleaned ' + days + 'd ago' : 'Never cleaned';
+
+    if (daysLeft <= 0) {
+      if (dueEl) { dueEl.textContent = '⚠ Clean now'; dueEl.className = 'sensor-status-due due-now'; }
+      if (dotEl) { dotEl.style.background = 'var(--danger)'; dotEl.style.boxShadow = '0 0 6px rgba(214,40,57,0.4)'; }
+    } else if (daysLeft <= WARN_DAYS) {
+      if (dueEl) { dueEl.textContent = 'Due in ' + daysLeft + ' days'; dueEl.className = 'sensor-status-due due-soon'; }
+      if (dotEl) { dotEl.style.background = 'var(--warn)'; dotEl.style.boxShadow = '0 0 6px rgba(224,123,0,0.4)'; }
+    } else {
+      if (dueEl) { dueEl.textContent = 'Next clean in ' + daysLeft + 'd'; dueEl.className = 'sensor-status-due due-ok'; }
+    }
+  });
+
+  // Update banner
+  const banner   = document.getElementById('maintDueBanner');
+  const bannerT  = document.getElementById('maintDueText');
+  const bannerS  = document.getElementById('maintDueSub');
+  const phDays   = daysSince(d.lastClean_ph);
+  const orpDays  = daysSince(d.lastClean_orp);
+  const maxDays  = Math.max(phDays, orpDays);
+
+  if (maxDays >= CLEAN_INTERVAL) {
+    banner.className = 'maint-due-banner';
+    bannerT.textContent = 'Sensor clean overdue!';
+    bannerS.textContent = 'Your pH and ORP probes are due for cleaning. Tap "Start Guided Clean" below.';
+  } else if (maxDays >= CLEAN_INTERVAL - WARN_DAYS) {
+    banner.className = 'maint-due-banner';
+    bannerT.textContent = 'Sensor clean due soon';
+    bannerS.textContent = 'Probes should be cleaned in the next ' + (CLEAN_INTERVAL - maxDays) + ' days for accurate readings.';
+  } else if (maxDays === 999) {
+    banner.className = 'maint-due-banner';
+    bannerT.textContent = 'First clean recommended';
+    bannerS.textContent = 'Clean and calibrate your sensors before relying on readings.';
+  } else {
+    banner.className = 'maint-due-banner ok';
+    bannerT.textContent = '✓ Sensors are up to date';
+    bannerS.textContent = 'Next clean due in ' + (CLEAN_INTERVAL - maxDays) + ' days.';
+  }
+}
+
+function triggerExport(type) {
+  const btn = event.currentTarget;
+  const orig = btn.querySelector('.export-btn-label').textContent;
+  btn.querySelector('.export-btn-label').textContent = '✓ Done';
+  btn.style.background = 'var(--success-l)';
+  btn.style.borderColor = '#B2EDD8';
+  setTimeout(() => {
+    btn.querySelector('.export-btn-label').textContent = orig;
+    btn.style.background = '';
+    btn.style.borderColor = '';
+  }, 2500);
+}
+
+function triggerTestAlert() {
+  triggerExport('alert');
+}
+
+// ── Clean & Calibrate Wizard ───────────────────────────────────────────
+let wizardStep = 0;
+let wizardTimer = null;
+let wizardTimerVal = 0;
+
+const WIZARD_STEPS = [
+  {
+    label: 'Before you start',
+    title: 'What you'll need',
+    progress: 5,
+    render: () => `
+      <div class="wizard-step-desc">This takes about 20 minutes. Gather these items before starting:</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🧴</div>
+        <div class="wizard-instruction-text"><strong>Pool acid (HCl)</strong> — you already have this for balancing pH. A small amount in a cup.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🥃</div>
+        <div class="wizard-instruction-text"><strong>3 small cups or containers</strong> — for acid soak, rinse water, and calibration solutions.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🌊</div>
+        <div class="wizard-instruction-text"><strong>Tap water</strong> — for rinsing probes between steps.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">📦</div>
+        <div class="wizard-instruction-text"><strong>Calibration solutions</strong> — pH 4, pH 7, pH 10 buffers and ORP 225mV solution (supplied with your sensors).</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🧻</div>
+        <div class="wizard-instruction-text"><strong>Cotton swabs and isopropyl alcohol</strong> (70%+) — for cleaning the ORP platinum band.</div>
+      </div>`,
+    next: 'I have everything →',
+  },
+  {
+    label: 'Step 1 of 7',
+    title: 'Stop water flow',
+    progress: 14,
+    render: () => `
+      <div class="wizard-step-desc">Isolate the probe bypass loop so you can safely remove the sensors.</div>
+      <div class="wizard-instruction highlight">
+        <div class="wizard-instruction-icon">🔴</div>
+        <div class="wizard-instruction-text"><strong>Close both ball valves</strong> on either side of the probe manifold. The pump can stay running — only the bypass loop will stop flowing.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">💧</div>
+        <div class="wizard-instruction-text">Have a small cloth or container ready to catch the small amount of water that will drip when you remove the probes.</div>
+      </div>`,
+    next: 'Valves closed →',
+  },
+  {
+    label: 'Step 2 of 7',
+    title: 'Remove probes',
+    progress: 28,
+    render: () => `
+      <div class="wizard-step-desc">Unscrew the pH and ORP probes from the manifold by hand. Never use tools — hand tight only.</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🔵</div>
+        <div class="wizard-instruction-text"><strong>pH probe</strong> — unscrew anticlockwise by hand. It is the probe with the glass bulb tip.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🟡</div>
+        <div class="wizard-instruction-text"><strong>ORP probe</strong> — unscrew anticlockwise by hand. It has a small platinum or gold band near the tip.</div>
+      </div>
+      <div class="wizard-instruction highlight">
+        <div class="wizard-instruction-icon">⚠️</div>
+        <div class="wizard-instruction-text"><strong>Never let the probe tips dry out.</strong> Keep them wet at all times during this process.</div>
+      </div>`,
+    next: 'Probes removed →',
+  },
+  {
+    label: 'Step 3 of 7',
+    title: 'Clean pH probe',
+    progress: 42,
+    render: () => `
+      <div class="wizard-step-desc">Soak the pH probe tip in dilute pool acid to dissolve calcium and organic buildup.</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🥃</div>
+        <div class="wizard-instruction-text">Fill a small cup with water and add <strong>a few drops of pool acid</strong> (HCl). Just a weak solution is enough.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🔵</div>
+        <div class="wizard-instruction-text">Place the <strong>pH probe tip only</strong> into the acid solution. Only the glass bulb and a few mm above it needs to be submerged.</div>
+      </div>
+      <div class="wizard-timer-box">
+        <div class="wizard-timer-label">SOAK TIMER</div>
+        <div class="wizard-timer-val" id="wizTimer">5:00</div>
+        <div class="wizard-timer-sub">5 minutes recommended</div>
+        <button class="wizard-timer-btn" onclick="startWizTimer(300)">▶ Start Timer</button>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🌊</div>
+        <div class="wizard-instruction-text">After soaking, rinse the probe thoroughly with tap water using at least 5 separate rinses.</div>
+      </div>`,
+    next: 'pH probe clean & rinsed →',
+  },
+  {
+    label: 'Step 4 of 7',
+    title: 'Clean ORP probe',
+    progress: 56,
+    render: () => `
+      <div class="wizard-step-desc">Clean the ORP probe's platinum band with isopropyl alcohol.</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🧻</div>
+        <div class="wizard-instruction-text">Dip a cotton swab in <strong>isopropyl alcohol (70%+)</strong>.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🟡</div>
+        <div class="wizard-instruction-text">Gently wipe the <strong>platinum or gold band</strong> near the probe tip. The metal should look shiny after cleaning. If it looks grey or dull, wipe gently until the shine returns.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🌊</div>
+        <div class="wizard-instruction-text">Rinse the ORP probe tip thoroughly with tap water after cleaning.</div>
+      </div>
+      <div class="wizard-instruction highlight">
+        <div class="wizard-instruction-icon">⚠️</div>
+        <div class="wizard-instruction-text"><strong>Do not scrub the glass parts</strong> of either probe. Only clean the metal electrode.</div>
+      </div>`,
+    next: 'ORP probe clean & rinsed →',
+  },
+  {
+    label: 'Step 5 of 7',
+    title: 'Calibrate pH probe',
+    progress: 70,
+    render: () => `
+      <div class="wizard-step-desc">Calibrate the pH probe using your three buffer solutions. Always calibrate from lowest to highest pH.</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">1️⃣</div>
+        <div class="wizard-instruction-text">Rinse probe with distilled or tap water. Place in <strong>pH 4.0 buffer</strong>. Wait 60 seconds for reading to stabilise.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">2️⃣</div>
+        <div class="wizard-instruction-text">Rinse probe. Place in <strong>pH 7.0 buffer</strong>. Wait 60 seconds.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">3️⃣</div>
+        <div class="wizard-instruction-text">Rinse probe. Place in <strong>pH 10.0 buffer</strong>. Wait 60 seconds.</div>
+      </div>
+      <div class="wizard-instruction success">
+        <div class="wizard-instruction-icon">💡</div>
+        <div class="wizard-instruction-text">Use the AquaSensiq SSH terminal or Atlas Desktop app to send calibration commands to the EZO-pH circuit if needed. Calibration can also be scheduled via the app in a future update.</div>
+      </div>`,
+    next: 'pH calibrated →',
+  },
+  {
+    label: 'Step 6 of 7',
+    title: 'Calibrate ORP probe',
+    progress: 84,
+    render: () => `
+      <div class="wizard-step-desc">Calibrate the ORP probe using the 225mV calibration solution.</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🟡</div>
+        <div class="wizard-instruction-text">Place the ORP probe tip into the <strong>225mV ORP calibration solution</strong>. Wait 1–2 minutes for the reading to stabilise. It should read 225mV when correctly calibrated.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🌊</div>
+        <div class="wizard-instruction-text">Rinse the probe with tap water after calibrating.</div>
+      </div>
+      <div class="wizard-instruction highlight">
+        <div class="wizard-instruction-icon">⏱</div>
+        <div class="wizard-instruction-text">After reinstalling, allow <strong>20–30 minutes</strong> before trusting ORP readings. The probe needs time to re-equilibrate in pool water.</div>
+      </div>`,
+    next: 'ORP calibrated →',
+  },
+  {
+    label: 'Step 7 of 7',
+    title: 'Reinstall probes',
+    progress: 96,
+    render: () => `
+      <div class="wizard-step-desc">Reinstall the probes and restore water flow to the bypass loop.</div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🔵</div>
+        <div class="wizard-instruction-text">Screw the <strong>pH probe</strong> back into its port. Hand tight only — do not over-tighten.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🟡</div>
+        <div class="wizard-instruction-text">Screw the <strong>ORP probe</strong> back into its port. Hand tight only.</div>
+      </div>
+      <div class="wizard-instruction">
+        <div class="wizard-instruction-icon">🟢</div>
+        <div class="wizard-instruction-text"><strong>Open both ball valves</strong> to restore flow through the bypass loop. Check for any leaks around the probe fittings.</div>
+      </div>
+      <div class="wizard-instruction success">
+        <div class="wizard-instruction-icon">✅</div>
+        <div class="wizard-instruction-text">Allow 20–30 minutes for readings to stabilise before making any chemical adjustments.</div>
+      </div>`,
+    next: 'All done — complete →',
+  },
+  {
+    label: 'Complete',
+    title: 'Clean complete!',
+    progress: 100,
+    render: () => `
+      <div class="wizard-complete">
+        <div class="wizard-complete-icon">🎉</div>
+        <div class="wizard-complete-title">Sensors cleaned &amp; calibrated</div>
+        <div class="wizard-complete-desc" style="margin-bottom:20px;">Your pH and ORP probes are clean and calibrated. AquaSensiq will remind you again in 30 days.</div>
+      </div>
+      <div class="wizard-instruction success">
+        <div class="wizard-instruction-icon">⏱</div>
+        <div class="wizard-instruction-text"><strong>Allow 20–30 minutes</strong> before trusting chemical readings. The ORP probe needs time to re-equilibrate.</div>
+      </div>`,
+    next: null,
+  },
+];
+
+function startCleanWizard() {
+  wizardStep = 0;
+  clearInterval(wizardTimer);
+  document.getElementById('cleanWizardOverlay').classList.add('active');
+  renderWizardStep();
+}
+
+function closeCleanWizard() {
+  document.getElementById('cleanWizardOverlay').classList.remove('active');
+  clearInterval(wizardTimer);
+  wizardTimer = null;
+}
+
+function renderWizardStep() {
+  const step = WIZARD_STEPS[wizardStep];
+  const isLast = wizardStep === WIZARD_STEPS.length - 1;
+  const isFirst = wizardStep === 0;
+
+  document.getElementById('wizardProgressFill').style.width = step.progress + '%';
+  document.getElementById('wizardSheetTitle').textContent = 'Clean & Calibrate';
+
+  const html = `
+    <div class="wizard-step-wrap">
+      <div class="wizard-step-label">${step.label}</div>
+      <div class="wizard-step-title">${step.title}</div>
+      ${step.render()}
+    </div>
+    <div class="wizard-nav">
+      ${isFirst ? '<button class="wizard-nav-secondary" onclick="closeCleanWizard()">Cancel</button>' :
+        isLast ? '' :
+        '<button class="wizard-nav-secondary" onclick="prevWizardStep()">← Back</button>'}
+      ${step.next ?
+        `<button class="wizard-nav-primary" onclick="nextWizardStep()">${step.next}</button>` :
+        `<button class="wizard-nav-primary" onclick="completeCleanWizard()">Close</button>`}
+    </div>
+  `;
+  document.getElementById('wizardStepContent').innerHTML = html;
+
+  // Scroll sheet to top
+  document.getElementById('cleanWizardSheet').scrollTop = 0;
+}
+
+function nextWizardStep() {
+  clearInterval(wizardTimer); wizardTimer = null;
+  if (wizardStep < WIZARD_STEPS.length - 1) { wizardStep++; renderWizardStep(); }
+}
+
+function prevWizardStep() {
+  clearInterval(wizardTimer); wizardTimer = null;
+  if (wizardStep > 0) { wizardStep--; renderWizardStep(); }
+}
+
+function completeCleanWizard() {
+  // Save clean date for both probes
+  const d = loadMaintData();
+  d.lastClean_ph  = Date.now();
+  d.lastClean_orp = Date.now();
+  saveMaintData(d);
+  closeCleanWizard();
+  initMaintPage();
+}
+
+function startWizTimer(seconds) {
+  clearInterval(wizardTimer);
+  wizardTimerVal = seconds;
+  updateTimerDisplay();
+  wizardTimer = setInterval(() => {
+    wizardTimerVal--;
+    updateTimerDisplay();
+    if (wizardTimerVal <= 0) {
+      clearInterval(wizardTimer);
+      const el = document.getElementById('wizTimer');
+      if (el) { el.textContent = '✓ Done'; el.style.fontSize = '36px'; }
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('wizTimer');
+  if (!el) return;
+  const m = Math.floor(wizardTimerVal / 60);
+  const s = wizardTimerVal % 60;
+  el.textContent = m + ':' + s.toString().padStart(2, '0');
 }
 
 // ── Init ──────────────────────────────────────────────────────────────
